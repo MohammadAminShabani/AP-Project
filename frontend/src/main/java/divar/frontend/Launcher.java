@@ -1,4 +1,4 @@
-package org.example.frontend;
+package divar.frontend;
 
 import javafx.application.Application;
 

@@ -1,4 +1,6 @@
-package org.example;
+package divar.entity;
+import divar.enums.AdStatus;
+
 import java.util.List;
 import java.util.ArrayList;
 

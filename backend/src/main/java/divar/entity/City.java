@@ -1,4 +1,4 @@
-package org.example;
+package divar.entity;
 
 public class City {
     private Long id;

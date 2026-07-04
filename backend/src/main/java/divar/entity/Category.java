@@ -1,4 +1,4 @@
-package org.example;
+package divar.entity;
 
 public class Category {
     private Long id;

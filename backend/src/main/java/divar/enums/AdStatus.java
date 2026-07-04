@@ -1,4 +1,4 @@
-package org.example;
+package divar.enums;
 
 public enum AdStatus {
     PENDING,
