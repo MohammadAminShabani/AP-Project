@@ -3,6 +3,6 @@ module org.example.frontend {
     requires javafx.fxml;
 
 
-    opens divar.frontend to javafx.fxml;
-    exports divar.frontend;
+    opens divar to javafx.fxml;
+    exports divar;
 }
