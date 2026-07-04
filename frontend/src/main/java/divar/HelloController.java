@@ -1,4 +1,4 @@
-package divar.frontend;
+package divar;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
