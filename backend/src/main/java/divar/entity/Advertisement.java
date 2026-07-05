@@ -1,6 +1,5 @@
 package divar.entity;
 import divar.enums.AdStatus;
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -10,7 +9,7 @@ public class Advertisement {
     private String description;
     private double price;
     private AdStatus status;
-    private List<String> images;
+    private List<AdvertisementImage> images;
 
     private User owner;
     private Category category;
@@ -20,7 +19,6 @@ public class Advertisement {
         this.images = new ArrayList<>();
     }
 
-    // کانستراکتور با پارامترهای اصلی هنگام ثبت آگهی جدید
     public Advertisement(String title, String description, double price, User owner, Category category, City city) {
         this.title = title;
         this.description = description;
@@ -28,23 +26,20 @@ public class Advertisement {
         this.owner = owner;
         this.category = category;
         this.city = city;
-        this.status = AdStatus.PENDING; // آگهی پس از ثبت در وضعیت در انتظار بررسی قرار می‌گیرد
+        this.status = AdStatus.PENDING;
         this.images = new ArrayList<>();
     }
 
-    // --- متدهای رفتاری (Behavioral Methods) ---
 
-    // تغییر وضعیت آگهی (مثلاً توسط مدیر یا در زمان فروش)
     public void changeStatus(AdStatus newStatus) {
         this.status = newStatus;
     }
 
-    // افزودن یک تصویر جدید به لیست تصاویر آگهی
-    public void addImage(String imageUrl) {
-        this.images.add(imageUrl);
+    public void addImage(AdvertisementImage image) {
+        images.add(image);
     }
 
-    // --- Getters and Setters (کپسوله‌سازی) ---
+    // --- Getters and Setters ---
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -61,9 +56,12 @@ public class Advertisement {
     public AdStatus getStatus() { return status; }
     public void setStatus(AdStatus status) { this.status = status; }
 
-    public List<String> getImages() { return images; }
-    public void setImages(List<String> images) { this.images = images; }
-
+    public List<AdvertisementImage> getImages() {
+        return images;
+    }
+    public void setImages(List<AdvertisementImage> images) {
+        this.images = images;
+    }
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
 

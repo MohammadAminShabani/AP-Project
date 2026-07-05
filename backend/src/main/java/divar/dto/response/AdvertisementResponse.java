@@ -1,6 +1,6 @@
 package divar.dto.response;
 
-import divar.enums.AdvertisementStatus;
+import divar.enums.AdStatus;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class AdvertisementResponse {
 
     private String category;
 
-    private AdvertisementStatus status;
+    private AdStatus status;
 
     private String ownerName;
 
