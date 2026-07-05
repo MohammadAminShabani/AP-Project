@@ -4,6 +4,7 @@ import divar.dto.request.LoginRequest;
 import divar.dto.request.RegisterRequest;
 import divar.dto.response.LoginResponse;
 import divar.dto.response.UserResponse;
+import divar.repository.UserRepository;
 import divar.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,12 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserResponse register(RegisterRequest request) {
