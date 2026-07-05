@@ -1,19 +1,15 @@
 package divar.service;
 
-import divar.entity.Advertisement;
-import divar.entity.Favorite;
-import divar.entity.User;
+import divar.dto.response.AdvertisementResponse;
 
 import java.util.List;
 
 public interface FavoriteService {
 
-    Favorite addToFavorites(Favorite favorite);
+    void add(Long userId, Long advertisementId);
 
-    void removeFromFavorites(Long id);
+    void remove(Long userId, Long advertisementId);
 
-    List<Favorite> getUserFavorites(User user);
-
-    boolean exists(User user, Advertisement advertisement);
+    List<AdvertisementResponse> getUserFavorites(Long userId);
 
 }

@@ -1,32 +1,29 @@
 package divar.service;
 
-import divar.entity.Advertisement;
-import divar.entity.Category;
-import divar.entity.City;
-import divar.entity.User;
+import divar.dto.request.CreateAdvertisementRequest;
+import divar.dto.request.UpdateAdvertisementRequest;
+import divar.dto.response.AdvertisementResponse;
 import divar.enums.AdStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AdvertisementService {
 
-    Advertisement save(Advertisement advertisement);
+    AdvertisementResponse create(Long ownerId, CreateAdvertisementRequest request);
 
-    Optional<Advertisement> findById(Long id);
+    AdvertisementResponse findById(Long id);
 
-    List<Advertisement> findAll();
+    List<AdvertisementResponse> findAll();
 
-    List<Advertisement> findByOwner(User owner);
+    List<AdvertisementResponse> findByStatus(AdStatus status);
 
-    List<Advertisement> findByCategory(Category category);
+    List<AdvertisementResponse> findByCategory(Long categoryId);
 
-    List<Advertisement> findByCity(City city);
+    List<AdvertisementResponse> findByCity(Long cityId);
 
-    List<Advertisement> findByStatus(AdStatus status);
+    List<AdvertisementResponse> findByOwner(Long ownerId);
 
-    Advertisement update(Advertisement advertisement);
+    AdvertisementResponse update(Long id, UpdateAdvertisementRequest request);
 
     void delete(Long id);
-
 }

@@ -1,19 +1,17 @@
 package divar.service;
 
-import divar.entity.Conversation;
-import divar.entity.User;
+import divar.dto.response.ConversationResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ConversationService {
 
-    Conversation createConversation(Conversation conversation);
+    ConversationResponse create(Long buyerId,
+                                Long sellerId,
+                                Long advertisementId);
 
-    Optional<Conversation> findById(Long id);
+    ConversationResponse findById(Long id);
 
-    List<Conversation> findByBuyer(User buyer);
-
-    List<Conversation> findBySeller(User seller);
+    List<ConversationResponse> getUserConversations(Long userId);
 
 }

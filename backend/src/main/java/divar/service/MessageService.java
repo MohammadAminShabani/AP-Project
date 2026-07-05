@@ -1,19 +1,15 @@
 package divar.service;
 
-import divar.entity.Conversation;
-import divar.entity.Message;
+import divar.dto.request.CreateMessageRequest;
+import divar.dto.response.MessageResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MessageService {
 
-    Message sendMessage(Message message);
+    MessageResponse send(Long senderId, CreateMessageRequest request);
 
-    Optional<Message> findById(Long id);
-
-    List<Message> findByConversation(Conversation conversation);
+    List<MessageResponse> getByConversation(Long conversationId);
 
     void delete(Long id);
-
 }

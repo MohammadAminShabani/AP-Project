@@ -1,15 +1,15 @@
 package divar.service;
 
-import divar.entity.Advertisement;
-import divar.entity.User;
+import divar.dto.response.AdvertisementResponse;
+import divar.dto.response.UserResponse;
 
 import java.util.List;
 
 public interface AdminService {
 
-    List<User> getAllUsers();
+    List<UserResponse> getAllUsers();
 
-    List<Advertisement> getAllAdvertisements();
+    List<AdvertisementResponse> getAllAdvertisements();
 
     void approveAdvertisement(Long advertisementId);
 

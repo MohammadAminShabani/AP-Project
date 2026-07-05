@@ -1,22 +1,23 @@
 package divar.service;
 
-import divar.entity.User;
+import divar.dto.request.LoginRequest;
+import divar.dto.request.RegisterRequest;
+import divar.dto.response.LoginResponse;
+import divar.dto.response.UserResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
-    User register(User user);
+    UserResponse register(RegisterRequest request);
 
-    Optional<User> login(String username, String password);
+    LoginResponse login(LoginRequest request);
 
-    Optional<User> findById(Long id);
+    UserResponse findById(Long id);
 
-    List<User> findAll();
+    List<UserResponse> findAll();
 
-    User update(User user);
+    UserResponse update(Long id, RegisterRequest request);
 
     void delete(Long id);
-
 }
