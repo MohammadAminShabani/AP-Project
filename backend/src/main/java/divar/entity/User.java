@@ -1,22 +1,31 @@
 package divar.entity;
-
+import jakarta.persistence.*;
 import divar.enums.UserRole;
 import divar.enums.UserStatus;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fullName;
     private String username;
     private String password;
     private String phoneNumber;
     private String email;
-
+    @Enumerated(EnumType.STRING)
     private UserRole role;
-    private UserStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
     private double averageRating;
     private int ratingCount;
+    @OneToMany(mappedBy = "owner")
+    private List<Advertisement> advertisements = new ArrayList<>();
 
     public User() {
     }

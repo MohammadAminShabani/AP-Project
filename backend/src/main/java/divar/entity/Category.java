@@ -1,10 +1,22 @@
 package divar.entity;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "categories")
 public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private Category parentCategory;
 
+    private String name;
+    @ManyToOne
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
+    @OneToMany(mappedBy = "parentCategory")
+    private List<Category> subCategories = new ArrayList<>();
     public Category() {
     }
 

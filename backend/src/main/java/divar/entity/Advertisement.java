@@ -2,21 +2,39 @@ package divar.entity;
 import divar.enums.AdStatus;
 import java.util.List;
 import java.util.ArrayList;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "advertisements")
 public class Advertisement {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
     private double price;
+    @Enumerated(EnumType.STRING)
     private AdStatus status;
-    private List<AdvertisementImage> images;
 
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdvertisementImage> images = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "city_id")
     private City city;
 
     public Advertisement() {
-        this.images = new ArrayList<>();
+
+
     }
 
     public Advertisement(String title, String description, double price, User owner, Category category, City city) {
@@ -27,7 +45,6 @@ public class Advertisement {
         this.category = category;
         this.city = city;
         this.status = AdStatus.PENDING;
-        this.images = new ArrayList<>();
     }
 
 
@@ -37,8 +54,8 @@ public class Advertisement {
 
     public void addImage(AdvertisementImage image) {
         images.add(image);
+        image.setAdvertisement(this);
     }
-
     // --- Getters and Setters ---
 
     public Long getId() { return id; }

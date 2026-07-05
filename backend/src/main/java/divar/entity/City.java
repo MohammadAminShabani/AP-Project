@@ -1,8 +1,12 @@
 package divar.entity;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "cities")
 public class City {
-    private Long id;
-    private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;    private String name;
     private String province;
 
     public City() {

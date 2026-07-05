@@ -1,12 +1,25 @@
 package divar.entity;
 
 import java.time.LocalDateTime;
-
+import jakarta.persistence.*;
+@Entity
+@Table(name = "conversations")
 public class Conversation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer_id")
     private User buyer;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
     private User seller;
+
+    @ManyToOne
+    @JoinColumn(name = "advertisement_id")
     private Advertisement advertisement;
 
     private LocalDateTime createdAt;
