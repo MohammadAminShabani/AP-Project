@@ -1,0 +1,75 @@
+package divar.entity;
+
+public class SellerRating {
+
+    private Long id;
+    private User seller;
+    private User buyer;
+    private Advertisement advertisement;
+    private int score;
+    private String comment;
+
+    public SellerRating() {
+    }
+
+    public SellerRating(User seller, User buyer, Advertisement advertisement,
+                        int score, String comment) {
+
+        this.seller = seller;
+        this.buyer = buyer;
+        this.advertisement = advertisement;
+        this.score = score;
+        this.comment = comment;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
+
+    public User getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(User buyer) {
+        this.buyer = buyer;
+    }
+
+    public Advertisement getAdvertisement() {
+        return advertisement;
+    }
+
+    public void setAdvertisement(Advertisement advertisement) {
+        this.advertisement = advertisement;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        if (score < 1 || score > 5) {
+            throw new IllegalArgumentException("Score must be between 1 and 5.");
+        }
+        this.score = score;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+}
