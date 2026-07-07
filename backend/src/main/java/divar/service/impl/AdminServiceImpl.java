@@ -31,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
                 .stream()
                 .map(user -> new UserResponse(
                         user.getId(), user.getFullName(), user.getUsername(),
-                        user.getPhoneNumber(), user.getEmail(), user.getRole()))
+                        user.getPhoneNumber(), user.getEmail(), user.getRole(),     user.getStatus()))
                 .toList();
     }
 

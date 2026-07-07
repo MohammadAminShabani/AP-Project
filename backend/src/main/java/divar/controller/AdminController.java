@@ -28,27 +28,27 @@ public class AdminController {
     }
 
     @PutMapping("/advertisements/{id}/approve")
-    public void approve(@PathVariable Long id) {
+    public void approve(@PathVariable("id") Long id) {
         adminService.approveAdvertisement(id);
     }
 
     @PutMapping("/advertisements/{id}/reject")
-    public void reject(@PathVariable Long id) {
+    public void reject(@PathVariable("id") Long id) {
         adminService.rejectAdvertisement(id);
     }
 
     @DeleteMapping("/advertisements/{id}")
-    public void deleteAdvertisement(@PathVariable Long id) {
+    public void deleteAdvertisement(@PathVariable("id") Long id) {
         adminService.deleteAdvertisement(id);
     }
 
     @PutMapping("/users/{id}/block")
-    public void blockUser(@PathVariable Long id) {
+    public void blockUser(@PathVariable("id") Long id) {
         adminService.blockUser(id);
     }
 
     @PutMapping("/users/{id}/unblock")
-    public void unblockUser(@PathVariable Long id) {
+    public void unblockUser(@PathVariable("id") Long id) {
         adminService.unblockUser(id);
     }
 }
