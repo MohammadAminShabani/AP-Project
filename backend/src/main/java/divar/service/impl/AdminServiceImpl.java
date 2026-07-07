@@ -3,7 +3,9 @@ package divar.service.impl;
 import divar.dto.response.AdvertisementResponse;
 import divar.dto.response.UserResponse;
 import divar.entity.Advertisement;
+import divar.entity.User;
 import divar.enums.AdStatus;
+import divar.enums.UserStatus;
 import divar.service.AdminService;
 import org.springframework.stereotype.Service;
 import divar.repository.AdvertisementRepository;
@@ -91,10 +93,22 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void blockUser(Long userId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(UserStatus.BLOCKED);
+
+        userRepository.save(user);
     }
 
     @Override
     public void unblockUser(Long userId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(UserStatus.ACTIVE);
+
+        userRepository.save(user);
     }
 }
