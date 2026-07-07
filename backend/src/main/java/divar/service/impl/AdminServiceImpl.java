@@ -2,6 +2,8 @@ package divar.service.impl;
 
 import divar.dto.response.AdvertisementResponse;
 import divar.dto.response.UserResponse;
+import divar.entity.Advertisement;
+import divar.enums.AdStatus;
 import divar.service.AdminService;
 import org.springframework.stereotype.Service;
 import divar.repository.AdvertisementRepository;
@@ -56,16 +58,34 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void approveAdvertisement(Long advertisementId) {
 
+        Advertisement advertisement = advertisementRepository.findById(advertisementId)
+                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+
+        advertisement.changeStatus(AdStatus.ACTIVE);
+
+        advertisementRepository.save(advertisement);
     }
 
     @Override
     public void rejectAdvertisement(Long advertisementId) {
 
+        Advertisement advertisement = advertisementRepository.findById(advertisementId)
+                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+
+        advertisement.changeStatus(AdStatus.REJECTED);
+
+        advertisementRepository.save(advertisement);
     }
 
     @Override
     public void deleteAdvertisement(Long advertisementId) {
 
+        Advertisement advertisement = advertisementRepository.findById(advertisementId)
+                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+
+        advertisement.setStatus(AdStatus.DELETED);
+
+        advertisementRepository.save(advertisement);
     }
 
     @Override
