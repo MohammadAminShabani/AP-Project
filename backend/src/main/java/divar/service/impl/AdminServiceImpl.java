@@ -29,10 +29,9 @@ public class AdminServiceImpl implements AdminService {
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> new UserResponse(
-                        user.getId(), user.getFullName(), user.getUsername(),
-                        user.getPhoneNumber(), user.getEmail(), user.getRole(),     user.getStatus()))
-                .toList();
+                .map(user -> new UserResponse (user.getId(), user.getFullName(), user.getUsername(),
+                        user.getPhoneNumber(), user.getEmail(), user.getRole(),
+                        user.getAverageRating(), user.getRatingCount())).toList();
     }
 
     @Override

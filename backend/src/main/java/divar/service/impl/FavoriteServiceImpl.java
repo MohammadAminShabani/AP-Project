@@ -77,7 +77,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                     response.setId(advertisement.getId());
                     response.setTitle(advertisement.getTitle());
                     response.setDescription(advertisement.getDescription());
-                    response.setPrice((long) advertisement.getPrice());
+                    response.setPrice(advertisement.getPrice());
 
                     response.setStatus(advertisement.getStatus());
 
