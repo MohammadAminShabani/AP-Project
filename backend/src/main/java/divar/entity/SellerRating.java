@@ -11,12 +11,12 @@ public class SellerRating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "seller_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
-    @ManyToOne
-    @JoinColumn(name = "buyer_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyer_id", nullable = false)
     private User buyer;
 
     @ManyToOne
