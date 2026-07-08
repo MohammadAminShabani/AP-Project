@@ -9,6 +9,8 @@ import divar.entity.AdvertisementImage;
 import divar.entity.Category;
 import divar.entity.City;
 import divar.entity.User;
+import divar.exception.BadRequestException;
+import divar.exception.ResourceNotFoundException;
 import divar.repository.AdvertisementRepository;
 import divar.repository.CategoryRepository;
 import divar.repository.CityRepository;
@@ -82,13 +84,13 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public AdvertisementResponse create(Long ownerId, CreateAdvertisementRequest request) {
 
         User owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new RuntimeException("Owner not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         City city = cityRepository.findById(request.getCityId())
-                .orElseThrow(() -> new RuntimeException("City not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
         Advertisement advertisement = new Advertisement(
                 request.getTitle(),
@@ -107,7 +109,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public AdvertisementResponse findById(Long id) {
 
         Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         return mapToResponse(advertisement);
     }
@@ -125,8 +127,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public Page<AdvertisementResponse> search(SearchAdvertisementRequest request) {
 
         Sort sort;
+        String sortType = request.getSort();
 
-        switch (request.getSort()) {
+        if (sortType == null || sortType.isBlank()) {
+            sortType = "newest";
+        }
+        switch (sortType) {
 
             case "priceAsc":
                 sort = Sort.by("price").ascending();
@@ -153,27 +159,28 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 sort = Sort.by("id").descending();
                 break;
         }
-        if (request.getPage() < 0) {
-            request.setPage(0);
+        Integer page = request.getPage();
+        Integer size = request.getSize();
+
+        if (page == null || page < 0) {
+            page = 0;
         }
 
-        if (request.getSize() <= 0) {
-            request.setSize(10);
+        if (size == null || size <= 0) {
+            size = 10;
         }
 
-        if (request.getSize() > 50) {
-            request.setSize(50);
+        if (size > 50) {
+            size = 50;
         }
-        Pageable pageable = PageRequest.of(
-                request.getPage(), request.getSize(), sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         if (request.getMinPrice() != null
                 && request.getMaxPrice() != null
                 && request.getMinPrice() > request.getMaxPrice()) {
 
-            throw new IllegalArgumentException(
-                    "Minimum price cannot be greater than maximum price."
-            );
+            throw new BadRequestException(
+                    "Minimum price cannot be greater than maximum price.");
         }
         Specification<Advertisement> specification =
                 Specification.where(
@@ -181,7 +188,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                         .and(AdvertisementSpecification.hasCity(request.getCityId()))
                         .and(AdvertisementSpecification.hasCategory(request.getCategoryId()))
                         .and(AdvertisementSpecification.hasStatus(
-                                request.getStatus() == null ? AdStatus.ACTIVE : request.getStatus()))                        .and(AdvertisementSpecification.hasMinPrice(request.getMinPrice()))
+                                request.getStatus() == null ? AdStatus.ACTIVE : request.getStatus()))
+                        .and(AdvertisementSpecification.hasMinPrice(request.getMinPrice()))
                         .and(AdvertisementSpecification.hasMaxPrice(request.getMaxPrice()));
 
         Page<Advertisement> advertisements =
@@ -202,7 +210,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public List<AdvertisementResponse> findByCategory(Long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         return advertisementRepository
                 .findByCategory(category)
@@ -214,7 +222,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public List<AdvertisementResponse> findByCity(Long cityId) {
 
         City city = cityRepository.findById(cityId)
-                .orElseThrow(() -> new RuntimeException("City not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
         return advertisementRepository
                 .findByCity(city)
@@ -226,7 +234,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public List<AdvertisementResponse> findByOwner(Long ownerId) {
 
         User owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new RuntimeException("Owner not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
 
         return advertisementRepository
                 .findByOwner(owner)
@@ -238,7 +246,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public AdvertisementResponse update(Long id, UpdateAdvertisementRequest request) {
 
         Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         advertisement.setTitle(request.getTitle());
         advertisement.setDescription(request.getDescription());
@@ -253,7 +261,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public void delete(Long id) {
 
         Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         advertisementRepository.delete(advertisement);
     }
