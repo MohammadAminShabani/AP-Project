@@ -17,6 +17,7 @@ public class User {
     private String password;
     private String phoneNumber;
     private String email;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -24,8 +25,12 @@ public class User {
     private UserStatus status;
     private double averageRating;
     private int ratingCount;
+
     @OneToMany(mappedBy = "owner")
     private List<Advertisement> advertisements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorite> favorites = new ArrayList<>();
 
     public User() {
     }
@@ -127,6 +132,14 @@ public class User {
 
     public void setRatingCount(int ratingCount) {
         this.ratingCount = ratingCount;
+    }
+
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
     @Override

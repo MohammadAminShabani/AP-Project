@@ -3,7 +3,8 @@ package divar.entity;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 @Entity
-@Table(name = "favorites")
+@Table(name = "favorites", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","advertisement_id"})})
+
 public class Favorite {
 
     @Id
@@ -11,11 +12,11 @@ public class Favorite {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "advertisement_id")
+    @JoinColumn(name = "advertisement_id", nullable = false)
     private Advertisement advertisement;
     private LocalDateTime createdAt;
 
