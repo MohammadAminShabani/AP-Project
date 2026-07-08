@@ -6,7 +6,8 @@ import divar.dto.response.AdvertisementResponse;
 import divar.enums.AdStatus;
 import divar.service.AdvertisementService;
 import org.springframework.web.bind.annotation.*;
-
+import divar.dto.request.SearchAdvertisementRequest;
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 @RestController
@@ -23,6 +24,13 @@ public class AdvertisementController {
     public AdvertisementResponse create(@PathVariable Long ownerId,
                                         @RequestBody CreateAdvertisementRequest request) {
         return advertisementService.create(ownerId, request);
+    }
+
+    @PostMapping("/search")
+    public Page<AdvertisementResponse> search(
+            @RequestBody SearchAdvertisementRequest request) {
+
+        return advertisementService.search(request);
     }
 
     @GetMapping("/{id}")

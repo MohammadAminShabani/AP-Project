@@ -17,8 +17,13 @@ public final class AdvertisementSpecification {
 
             String search = "%" + keyword.trim().toLowerCase() + "%";
 
-            return cb.or(cb.like(cb.lower(root.get("title")), search),
-                    cb.like(cb.lower(root.get("description")), search));};
+            return cb.or(
+                    cb.like(cb.lower(root.get("title")), search),
+                    cb.like(cb.lower(root.get("description")), search),
+                    cb.like(cb.lower(root.get("category").get("name")), search),
+                    cb.like(cb.lower(root.get("city").get("name")), search),
+                    cb.like(cb.lower(root.get("owner").get("fullName")), search)
+            );};
     }
 
     public static Specification<Advertisement> hasCity(Long cityId) {
