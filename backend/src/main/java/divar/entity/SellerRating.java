@@ -2,7 +2,9 @@ package divar.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "seller_ratings")
+@Table(
+        name = "seller_ratings",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"buyer_id","advertisement_id"})})
 public class SellerRating {
 
     @Id
