@@ -1,8 +1,6 @@
 package divar.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import jakarta.persistence.*;
 @Entity
@@ -13,11 +11,6 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "conversation",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
@@ -25,8 +18,15 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
+
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String text;
+
+    @Column(nullable = false)
     private LocalDateTime sentAt;
+
+    @Column(nullable = false)
+    private boolean isRead = false;
 
     public Message() {
         this.sentAt = LocalDateTime.now();
@@ -37,6 +37,14 @@ public class Message {
         this.sender = sender;
         this.text = text;
         this.sentAt = LocalDateTime.now();
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 
     public Long getId() {

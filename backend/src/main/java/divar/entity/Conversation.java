@@ -1,6 +1,9 @@
 package divar.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "conversations",
@@ -23,6 +26,12 @@ public class Conversation {
     @ManyToOne
     @JoinColumn(name = "advertisement_id")
     private Advertisement advertisement;
+    @OneToMany
+            (mappedBy = "conversation",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+
+    private List<Message> messages = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
