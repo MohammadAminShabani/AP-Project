@@ -3,7 +3,9 @@ package divar.entity;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 @Entity
-@Table(name = "conversations")
+@Table(name = "conversations",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"buyer_id","advertisement_id"})
+        })
 public class Conversation {
 
     @Id

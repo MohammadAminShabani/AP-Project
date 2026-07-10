@@ -1,6 +1,9 @@
 package divar.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "messages")
@@ -9,6 +12,11 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "conversation",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Message> messages = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "conversation_id")
