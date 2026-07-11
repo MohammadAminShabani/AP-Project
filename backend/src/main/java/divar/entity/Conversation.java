@@ -26,6 +26,7 @@ public class Conversation {
     @ManyToOne
     @JoinColumn(name = "advertisement_id")
     private Advertisement advertisement;
+
     @OneToMany
             (mappedBy = "conversation",
             cascade = CascadeType.ALL,
@@ -64,6 +65,10 @@ public class Conversation {
 
     public User getSeller() {
         return seller;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 
     public void setSeller(User seller) {
