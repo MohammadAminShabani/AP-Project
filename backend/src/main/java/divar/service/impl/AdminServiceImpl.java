@@ -6,6 +6,8 @@ import divar.entity.Advertisement;
 import divar.entity.User;
 import divar.enums.AdStatus;
 import divar.enums.UserStatus;
+import divar.exception.BadRequestException;
+import divar.exception.ResourceNotFoundException;
 import divar.service.AdminService;
 import org.springframework.stereotype.Service;
 import divar.repository.AdvertisementRepository;
@@ -60,8 +62,10 @@ public class AdminServiceImpl implements AdminService {
     public void approveAdvertisement(Long advertisementId) {
 
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
-                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found."));
+        if (advertisement.getStatus() == AdStatus.ACTIVE) {
+            throw new BadRequestException("Advertisement is already approved.");
+        }
         advertisement.changeStatus(AdStatus.ACTIVE);
 
         advertisementRepository.save(advertisement);
@@ -71,8 +75,10 @@ public class AdminServiceImpl implements AdminService {
     public void rejectAdvertisement(Long advertisementId) {
 
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
-                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found."));
+        if (advertisement.getStatus() == AdStatus.REJECTED) {
+            throw new BadRequestException("Advertisement is already rejected.");
+        }
         advertisement.changeStatus(AdStatus.REJECTED);
 
         advertisementRepository.save(advertisement);
@@ -82,9 +88,11 @@ public class AdminServiceImpl implements AdminService {
     public void deleteAdvertisement(Long advertisementId) {
 
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
-                .orElseThrow(() -> new RuntimeException("Advertisement not found"));
-
-        advertisement.setStatus(AdStatus.DELETED);
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found."));
+        if (advertisement.getStatus() == AdStatus.DELETED) {
+            throw new BadRequestException("Advertisement is already deleted.");
+        }
+        advertisement.changeStatus(AdStatus.DELETED);
 
         advertisementRepository.save(advertisement);
     }
@@ -93,8 +101,10 @@ public class AdminServiceImpl implements AdminService {
     public void blockUser(Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+        if (user.getStatus() == UserStatus.BLOCKED) {
+            throw new BadRequestException("User is already blocked.");
+        }
         user.setStatus(UserStatus.BLOCKED);
 
         userRepository.save(user);
@@ -104,8 +114,10 @@ public class AdminServiceImpl implements AdminService {
     public void unblockUser(Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+        if (user.getStatus() == UserStatus.ACTIVE) {
+            throw new BadRequestException("User is already active.");
+        }
         user.setStatus(UserStatus.ACTIVE);
 
         userRepository.save(user);
