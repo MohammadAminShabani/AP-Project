@@ -69,7 +69,8 @@ public class UserServiceImpl implements UserService {
         response.setPhoneNumber(savedUser.getPhoneNumber());
         response.setEmail(savedUser.getEmail());
         response.setRole(savedUser.getRole());
-
+        response.setAverageRating(savedUser.getAverageRating());
+        response.setRatingCount(savedUser.getRatingCount());
         return response;
     }
 
