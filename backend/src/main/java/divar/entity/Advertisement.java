@@ -13,7 +13,7 @@ public class Advertisement {
     private Long id;
     private String title;
     private String description;
-    private double price;
+    private Long price;
     @Enumerated(EnumType.STRING)
     private AdStatus status;
 
@@ -37,7 +37,7 @@ public class Advertisement {
 
     }
 
-    public Advertisement(String title, String description, double price, User owner, Category category, City city) {
+    public Advertisement(String title, String description, Long price, User owner, Category category, City city) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -67,8 +67,8 @@ public class Advertisement {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public Long getPrice() { return price; }
+    public void setPrice(Long price) { this.price = price; }
 
     public AdStatus getStatus() { return status; }
     public void setStatus(AdStatus status) { this.status = status; }
