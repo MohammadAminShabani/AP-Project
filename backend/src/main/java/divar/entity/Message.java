@@ -1,6 +1,7 @@
 package divar.entity;
 
 import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "messages")
@@ -17,8 +18,15 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
+
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String text;
+
+    @Column(nullable = false)
     private LocalDateTime sentAt;
+
+    @Column(nullable = false)
+    private boolean isRead = false;
 
     public Message() {
         this.sentAt = LocalDateTime.now();
@@ -29,6 +37,14 @@ public class Message {
         this.sender = sender;
         this.text = text;
         this.sentAt = LocalDateTime.now();
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 
     public Long getId() {
