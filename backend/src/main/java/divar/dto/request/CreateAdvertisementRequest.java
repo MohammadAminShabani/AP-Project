@@ -4,7 +4,7 @@ public class CreateAdvertisementRequest {
 
     private String title;
     private String description;
-    private double price;
+    private Long price;
     private Long categoryId;
     private Long cityId;
 
@@ -12,7 +12,7 @@ public class CreateAdvertisementRequest {
     }
 
     public CreateAdvertisementRequest(String title, String description,
-                                      double price,
+                                      Long price,
                                       Long categoryId,
                                       Long cityId) {
         this.title = title;
@@ -38,11 +38,11 @@ public class CreateAdvertisementRequest {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 
