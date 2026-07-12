@@ -3,8 +3,11 @@ package divar.controller;
 import divar.dto.request.CreateAdvertisementRequest;
 import divar.dto.request.UpdateAdvertisementRequest;
 import divar.dto.response.AdvertisementResponse;
+import divar.entity.User;
 import divar.enums.AdStatus;
 import divar.service.AdvertisementService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +22,15 @@ public class AdvertisementController {
         this.advertisementService = advertisementService;
     }
 
-    @PostMapping("/{ownerId}")
-    public AdvertisementResponse create(@PathVariable Long ownerId,
-                                        @RequestBody CreateAdvertisementRequest request) {
-        return advertisementService.create(ownerId, request);
+
+    @PostMapping
+    public AdvertisementResponse create(
+            @RequestBody CreateAdvertisementRequest request,
+            Authentication authentication) {
+
+        User owner = (User) authentication.getPrincipal();
+
+        return advertisementService.create(request, owner);
     }
 
     @GetMapping("/{id}")
