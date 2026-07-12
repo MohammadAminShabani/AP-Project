@@ -3,13 +3,14 @@ package divar.service;
 import divar.dto.request.CreateAdvertisementRequest;
 import divar.dto.request.UpdateAdvertisementRequest;
 import divar.dto.response.AdvertisementResponse;
+import divar.entity.User;
 import divar.enums.AdStatus;
 
 import java.util.List;
 
 public interface AdvertisementService {
 
-    AdvertisementResponse create(Long ownerId, CreateAdvertisementRequest request);
+    AdvertisementResponse create( CreateAdvertisementRequest request , User owner);
 
     AdvertisementResponse findById(Long id);
 
