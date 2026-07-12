@@ -1,5 +1,7 @@
 package divar.security;
 
+import divar.entity.User;
+import divar.repository.UserRepository;
 import divar.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,12 +22,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            UserRepository userRepository) {
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
         this.jwtService = jwtService;
+        this.userRepository = userRepository;
     }
-
 
     @Override
     protected void doFilterInternal(
@@ -51,24 +56,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String username = jwtService.extractUsername(token);
 
-
-            if(username != null &&
+            if (username != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
 
+                User user = userRepository.findByUsername(username)
+                        .orElse(null);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                username,
-                                null,
-                                null
-                        );
+                if (user != null && jwtService.isTokenValid(token, user)) {
 
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    null,
+                                    null
+                            );
 
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authentication);
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authentication);
+                }
             }
-
 
         } catch(Exception e){
 
