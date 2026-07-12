@@ -16,15 +16,22 @@ public class UserResponse {
 
     private UserRole role;
 
+    private double averageRating;
+
+    private int ratingCount;
+
     public UserResponse(){}
 
-    public UserResponse(Long id , String fullName , String username , String phoneNumber , String email , UserRole role){
+    public UserResponse(Long id, String fullName, String username, String phoneNumber,
+                        String email, UserRole role, double averageRating, int ratingCount) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.role = role;
+        this.averageRating = averageRating;
+        this.ratingCount = ratingCount;
     }
 
     public String getUsername() {
@@ -42,7 +49,7 @@ public class UserResponse {
     public String getEmail() {
         return email;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -75,4 +82,19 @@ public class UserResponse {
         this.role = role;
     }
 
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
 }

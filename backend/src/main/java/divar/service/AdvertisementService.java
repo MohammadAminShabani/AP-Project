@@ -1,10 +1,12 @@
 package divar.service;
 
 import divar.dto.request.CreateAdvertisementRequest;
+import divar.dto.request.SearchAdvertisementRequest;
 import divar.dto.request.UpdateAdvertisementRequest;
 import divar.dto.response.AdvertisementResponse;
 import divar.entity.User;
 import divar.enums.AdStatus;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ public interface AdvertisementService {
     List<AdvertisementResponse> findByCity(Long cityId);
 
     List<AdvertisementResponse> findByOwner(Long ownerId);
+
+    Page<AdvertisementResponse> search(SearchAdvertisementRequest request);
 
     AdvertisementResponse update(Long id, UpdateAdvertisementRequest request);
 

@@ -9,7 +9,8 @@ import divar.service.AdvertisementService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
+import divar.dto.request.SearchAdvertisementRequest;
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 @RestController
@@ -31,6 +32,13 @@ public class AdvertisementController {
         User owner = (User) authentication.getPrincipal();
 
         return advertisementService.create(request, owner);
+    }
+
+    @PostMapping("/search")
+    public Page<AdvertisementResponse> search(
+            @RequestBody SearchAdvertisementRequest request) {
+
+        return advertisementService.search(request);
     }
 
     @GetMapping("/{id}")

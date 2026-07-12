@@ -1,9 +1,14 @@
 package divar.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 @Entity
-@Table(name = "conversations")
+@Table(name = "conversations",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"buyer_id","advertisement_id"})
+        })
 public class Conversation {
 
     @Id
@@ -21,6 +26,13 @@ public class Conversation {
     @ManyToOne
     @JoinColumn(name = "advertisement_id")
     private Advertisement advertisement;
+
+    @OneToMany
+            (mappedBy = "conversation",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+
+    private List<Message> messages = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
@@ -53,6 +65,10 @@ public class Conversation {
 
     public User getSeller() {
         return seller;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 
     public void setSeller(User seller) {
