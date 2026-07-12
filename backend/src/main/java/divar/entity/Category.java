@@ -34,4 +34,12 @@ public class Category {
 
     public Category getParentCategory() { return parentCategory; }
     public void setParentCategory(Category parentCategory) { this.parentCategory = parentCategory; }
+
+    public List<Category> getSubCategories() {
+        return subCategories;
+    }
+
+    public void setSubCategories(List<Category> subCategories) {
+        this.subCategories = subCategories;
+    }
 }
