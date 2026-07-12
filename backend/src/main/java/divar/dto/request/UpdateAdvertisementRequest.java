@@ -4,17 +4,23 @@ public class UpdateAdvertisementRequest {
 
     private String title;
     private String description;
-    private double price;
+    private Long price;
+    private Long cityId;
+    private Long categoryId;
 
     public UpdateAdvertisementRequest() {
     }
 
     public UpdateAdvertisementRequest(String title,
                                       String description,
-                                      double price) {
+                                      Long price,
+                                      Long categoryId,
+                                      Long cityId) {
         this.title = title;
         this.description = description;
         this.price = price;
+        this.categoryId = categoryId;
+        this.cityId = cityId;
     }
 
     public String getTitle() {
@@ -33,11 +39,27 @@ public class UpdateAdvertisementRequest {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Long price) {
         this.price = price;
+    }
+
+    public Long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }
