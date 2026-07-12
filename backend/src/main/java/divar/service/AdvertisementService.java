@@ -6,11 +6,17 @@ import divar.dto.request.UpdateAdvertisementRequest;
 import divar.dto.response.AdvertisementResponse;
 import divar.entity.User;
 import divar.enums.AdStatus;
+import divar.repository.AdvertisementRepository;
+import divar.repository.CategoryRepository;
+import divar.repository.CityRepository;
+import divar.repository.UserRepository;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface AdvertisementService {
+
+
 
     AdvertisementResponse create( CreateAdvertisementRequest request , User owner);
 
