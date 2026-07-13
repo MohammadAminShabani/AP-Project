@@ -5,6 +5,7 @@ import divar.entity.SellerRating;
 import divar.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +27,12 @@ public interface SellerRatingRepository extends JpaRepository<SellerRating, Long
             from SellerRating r
             where r.seller.id = :sellerId
             """)
-    Double getAverageRating(Long sellerId);
+    Double getAverageRating(@Param("sellerId")Long sellerId);
 
     @Query("""
             select count(r)
             from SellerRating r
             where r.seller.id = :sellerId
             """)
-    Long getRatingCount(Long sellerId);
+    Long getRatingCount(@Param("sellerId")Long sellerId);
 }

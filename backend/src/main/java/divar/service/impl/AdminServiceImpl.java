@@ -12,6 +12,8 @@ import divar.service.AdminService;
 import org.springframework.stereotype.Service;
 import divar.repository.AdvertisementRepository;
 import divar.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +35,9 @@ public class AdminServiceImpl implements AdminService {
                 .stream()
                 .map(user -> new UserResponse (user.getId(), user.getFullName(), user.getUsername(),
                         user.getPhoneNumber(), user.getEmail(), user.getRole(),
-                        user.getAverageRating(), user.getRatingCount())).toList();
+                        user.getAverageRating(), user.getRatingCount(), user.getStatus())).toList();
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<AdvertisementResponse> getAllAdvertisements() {
         return advertisementRepository.findAll()

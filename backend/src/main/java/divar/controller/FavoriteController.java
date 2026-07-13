@@ -17,19 +17,25 @@ public class FavoriteController {
     }
 
     @PostMapping
-    public void add(@RequestParam Long userId,
-                    @RequestParam Long advertisementId) {
+    public void add(
+            @RequestParam("userId") Long userId,
+            @RequestParam("advertisementId") Long advertisementId) {
+
         favoriteService.add(userId, advertisementId);
     }
 
     @DeleteMapping
-    public void remove(@RequestParam Long userId,
-                       @RequestParam Long advertisementId) {
+    public void remove(
+            @RequestParam("userId") Long userId,
+            @RequestParam("advertisementId") Long advertisementId) {
+
         favoriteService.remove(userId, advertisementId);
     }
 
     @GetMapping("/{userId}")
-    public List<AdvertisementResponse> getFavorites(@PathVariable Long userId) {
+    public List<AdvertisementResponse> getFavorites(
+            @PathVariable("userId") Long userId) {
+
         return favoriteService.getUserFavorites(userId);
     }
 }

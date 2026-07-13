@@ -38,8 +38,7 @@ public class UserServiceImpl implements UserService {
         if(request.getPassword() == null || request.getPassword().isEmpty()){
             throw new PasswordMustNotBeEmptyException("Password must not be empty.");
         }
-        if (request.getEmail() != null &&
-                !request.getEmail().isBlank() &&
+        if (request.getEmail() != null && !request.getEmail().isBlank() &&
                 userRepository.existsByEmail(request.getEmail())) {
 
             throw new EmailAlreadyExistsException("Email already exists.");
@@ -69,6 +68,7 @@ public class UserServiceImpl implements UserService {
         response.setPhoneNumber(savedUser.getPhoneNumber());
         response.setEmail(savedUser.getEmail());
         response.setRole(savedUser.getRole());
+        response.setStatus(savedUser.getStatus());
         response.setAverageRating(savedUser.getAverageRating());
         response.setRatingCount(savedUser.getRatingCount());
         return response;
@@ -101,21 +101,103 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserResponse findById(Long id) {
-        return null;
-    }
 
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
+
+        UserResponse response = new UserResponse();
+
+        response.setId(user.getId());
+        response.setFullName(user.getFullName());
+        response.setUsername(user.getUsername());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setStatus(user.getStatus());
+        response.setAverageRating(user.getAverageRating());
+        response.setRatingCount(user.getRatingCount());
+
+        return response;
+    }
     @Override
     public List<UserResponse> findAll() {
-        return List.of();
-    }
 
+        return userRepository.findAll()
+                .stream()
+                .map(user -> {
+
+                    UserResponse response = new UserResponse();
+
+                    response.setId(user.getId());
+                    response.setFullName(user.getFullName());
+                    response.setUsername(user.getUsername());
+                    response.setPhoneNumber(user.getPhoneNumber());
+                    response.setEmail(user.getEmail());
+                    response.setRole(user.getRole());
+                    response.setStatus(user.getStatus());
+                    response.setAverageRating(user.getAverageRating());
+                    response.setRatingCount(user.getRatingCount());
+
+                    return response;
+                })
+                .toList();
+    }
     @Override
     public UserResponse update(Long id, RegisterRequest request) {
-        return null;
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+
+        if (!user.getUsername().equals(request.getUsername())
+                && userRepository.existsByUsername(request.getUsername())) {
+
+            throw new UsernameAlreadyExistsException("Username already exists.");
+        }
+
+        if (!user.getPhoneNumber().equals(request.getPhoneNumber())
+                && userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+
+            throw new PhoneNumberAlreadyExistsException("Phone number already exists.");
+        }
+
+        if (request.getEmail() != null && !request.getEmail().isBlank() &&
+                !request.getEmail().equals(user.getEmail()) &&
+                userRepository.existsByEmail(request.getEmail())) {
+
+            throw new EmailAlreadyExistsException("Email already exists.");
+        }
+
+        user.setFullName(request.getFullName());
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setEmail(request.getEmail());
+
+        User updatedUser = userRepository.save(user);
+
+        UserResponse response = new UserResponse();
+
+        response.setId(updatedUser.getId());
+        response.setFullName(updatedUser.getFullName());
+        response.setUsername(updatedUser.getUsername());
+        response.setPhoneNumber(updatedUser.getPhoneNumber());
+        response.setEmail(updatedUser.getEmail());
+        response.setRole(updatedUser.getRole());
+        response.setStatus(updatedUser.getStatus());
+        response.setAverageRating(updatedUser.getAverageRating());
+        response.setRatingCount(updatedUser.getRatingCount());
+
+        return response;
     }
 
     @Override
     public void delete(Long id) {
 
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+
+        user.setStatus(UserStatus.BLOCKED);
+        userRepository.save(user);
     }
 }

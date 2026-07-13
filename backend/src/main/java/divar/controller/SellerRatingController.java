@@ -20,8 +20,8 @@ public class SellerRatingController {
 
     @PostMapping
     public SellerRatingResponse rateSeller(
-            @RequestParam Long buyerId,
-            @RequestParam Long advertisementId,
+            @RequestParam("buyerId") Long buyerId,
+            @RequestParam("advertisementId") Long advertisementId,
             @RequestBody RateSellerRequest request) {
 
         return sellerRatingService.rateSeller(
@@ -32,22 +32,22 @@ public class SellerRatingController {
 
     @GetMapping("/{sellerId}")
     public List<SellerRatingResponse> getSellerRatings(
-            @PathVariable Long sellerId) {
+            @PathVariable("sellerId") Long sellerId) {
 
         return sellerRatingService.getSellerRatings(sellerId);
     }
 
     @GetMapping("/{sellerId}/average")
     public SellerRatingAverageResponse getAverageRating(
-            @PathVariable Long sellerId) {
+            @PathVariable("sellerId") Long sellerId) {
 
         return sellerRatingService.getSellerAverageRating(sellerId);
     }
 
     @DeleteMapping
     public void deleteRating(
-            @RequestParam Long buyerId,
-            @RequestParam Long advertisementId) {
+            @RequestParam("buyerId") Long buyerId,
+            @RequestParam("advertisementId") Long advertisementId) {
 
         sellerRatingService.deleteRating(
                 buyerId,

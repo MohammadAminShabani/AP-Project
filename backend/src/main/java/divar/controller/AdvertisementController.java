@@ -29,6 +29,10 @@ public class AdvertisementController {
             @RequestBody CreateAdvertisementRequest request,
             Authentication authentication) {
 
+        System.out.println("=== CREATE ADVERTISEMENT ===");
+        System.out.println(authentication);
+        System.out.println(authentication.getPrincipal());
+
         User owner = (User) authentication.getPrincipal();
 
         return advertisementService.create(request, owner);

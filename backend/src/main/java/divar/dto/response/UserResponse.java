@@ -1,6 +1,7 @@
 package divar.dto.response;
 
 import divar.enums.UserRole;
+import divar.enums.UserStatus;
 
 public class UserResponse {
 
@@ -20,10 +21,12 @@ public class UserResponse {
 
     private int ratingCount;
 
+    private UserStatus status;
+
     public UserResponse(){}
 
-    public UserResponse(Long id, String fullName, String username, String phoneNumber,
-                        String email, UserRole role, double averageRating, int ratingCount) {
+    public UserResponse(Long id, String fullName, String username, String phoneNumber, String email,
+                        UserRole role, double averageRating, int ratingCount, UserStatus status) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
@@ -32,6 +35,7 @@ public class UserResponse {
         this.role = role;
         this.averageRating = averageRating;
         this.ratingCount = ratingCount;
+        this.status = status;
     }
 
     public String getUsername() {
@@ -56,6 +60,14 @@ public class UserResponse {
 
     public UserRole getRole() {
         return role;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
     public void setUsername(String username) {

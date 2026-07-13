@@ -4,10 +4,19 @@ import divar.dto.request.CreateAdvertisementRequest;
 import divar.dto.request.SearchAdvertisementRequest;
 import divar.dto.request.UpdateAdvertisementRequest;
 import divar.dto.response.AdvertisementResponse;
-import divar.exception.*;
+
 import divar.entity.*;
 import divar.enums.AdStatus;
-import divar.repository.*;
+
+import divar.exception.BadRequestException;
+import divar.exception.NotFoundException;
+import divar.exception.ResourceNotFoundException;
+
+import divar.repository.AdvertisementRepository;
+import divar.repository.CategoryRepository;
+import divar.repository.CityRepository;
+import divar.repository.UserRepository;
+
 import divar.service.AdvertisementService;
 import divar.specification.AdvertisementSpecification;
 import org.springframework.data.domain.*;
@@ -39,9 +48,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         this.cityRepository = cityRepository;
     }
 
-    /**
-     * تبدیل Advertisement به AdvertisementResponse
-     */
     private AdvertisementResponse mapToResponse(Advertisement advertisement) {
 
         AdvertisementResponse response = new AdvertisementResponse();
@@ -191,31 +197,57 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
     @Override
     public List<AdvertisementResponse> findByStatus(AdStatus status) {
-        return List.of();
-    }
 
+        return advertisementRepository
+                .findByStatus(status)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
     @Override
     public List<AdvertisementResponse> findByCategory(Long categoryId) {
-        return List.of();
-    }
 
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+
+        return advertisementRepository
+                .findByCategory(category)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
     @Override
     public List<AdvertisementResponse> findByCity(Long cityId) {
-        return List.of();
-    }
 
+        City city = cityRepository.findById(cityId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("City not found"));
+
+        return advertisementRepository
+                .findByCity(city)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
     @Override
     public List<AdvertisementResponse> findByOwner(Long ownerId) {
-        return List.of();
-    }
 
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Owner not found"));
+
+        return advertisementRepository
+                .findByOwner(owner)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
     @Override
     @Transactional
     public AdvertisementResponse update(Long id, UpdateAdvertisementRequest request) {
 
         Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Advertisement not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         if (request.getTitle() != null && !request.getTitle().isBlank()) {
             advertisement.setTitle(request.getTitle());
@@ -232,8 +264,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (request.getCategoryId() != null) {
 
             Category category = categoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("Category not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
             advertisement.setCategory(category);
         }
@@ -241,8 +272,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (request.getCityId() != null) {
 
             City city = cityRepository.findById(request.getCityId())
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("City not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
             advertisement.setCity(city);
         }
@@ -257,8 +287,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public void delete(Long id) {
 
         Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Advertisement not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         advertisementRepository.delete(advertisement);
     }

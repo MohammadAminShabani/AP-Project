@@ -13,6 +13,7 @@ import divar.repository.AdvertisementRepository;
 import divar.repository.FavoriteRepository;
 import divar.repository.UserRepository;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
@@ -60,6 +61,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteRepository.delete(favorite);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AdvertisementResponse> getUserFavorites(Long userId) {
 
@@ -91,13 +93,11 @@ public class FavoriteServiceImpl implements FavoriteService {
                         response.setOwnerName(advertisement.getOwner().getFullName());
                         response.setAverageRate(advertisement.getOwner().getAverageRating());}
 
-                    response.setImageUrls(
-                            advertisement.getImages()
+                    response.setImageUrls(advertisement.getImages()
                                     .stream()
                                     .map(AdvertisementImage::getImageUrl)
                                     .toList());
-                    return response;
-                })
+                    return response;})
                 .toList();
     }
 }

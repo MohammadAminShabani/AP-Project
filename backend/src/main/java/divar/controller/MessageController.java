@@ -18,18 +18,24 @@ public class MessageController {
     }
 
     @PostMapping("/{senderId}")
-    public MessageResponse send(@PathVariable Long senderId,
-                                @RequestBody CreateMessageRequest request) {
+    public MessageResponse send(
+            @PathVariable("senderId") Long senderId,
+            @RequestBody CreateMessageRequest request) {
+
         return messageService.send(senderId, request);
     }
 
     @GetMapping("/conversation/{conversationId}")
-    public List<MessageResponse> getMessages(@PathVariable Long conversationId) {
+    public List<MessageResponse> getMessages(
+            @PathVariable("conversationId") Long conversationId) {
+
         return messageService.getByConversation(conversationId);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(
+            @PathVariable("id") Long id) {
+
         messageService.delete(id);
     }
 }

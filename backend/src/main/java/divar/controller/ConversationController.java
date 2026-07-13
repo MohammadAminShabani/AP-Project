@@ -17,18 +17,25 @@ public class ConversationController {
     }
 
     @PostMapping
-    public ConversationResponse create(@RequestParam Long buyerId, @RequestParam Long sellerId,
-                                       @RequestParam Long advertisementId) {
+    public ConversationResponse create(
+            @RequestParam("buyerId") Long buyerId,
+            @RequestParam("sellerId") Long sellerId,
+            @RequestParam("advertisementId") Long advertisementId) {
+
         return conversationService.create(buyerId, sellerId, advertisementId);
     }
 
     @GetMapping("/{id}")
-    public ConversationResponse findById(@PathVariable Long id) {
+    public ConversationResponse findById(
+            @PathVariable("id") Long id) {
+
         return conversationService.findById(id);
     }
 
     @GetMapping("/user/{userId}")
-    public List<ConversationResponse> getUserConversations(@PathVariable Long userId) {
+    public List<ConversationResponse> getUserConversations(
+            @PathVariable("userId") Long userId) {
+
         return conversationService.getUserConversations(userId);
     }
 }
