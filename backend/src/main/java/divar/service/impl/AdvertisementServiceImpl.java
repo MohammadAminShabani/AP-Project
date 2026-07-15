@@ -16,7 +16,9 @@ import divar.repository.AdvertisementRepository;
 import divar.repository.CategoryRepository;
 import divar.repository.CityRepository;
 import divar.repository.UserRepository;
-
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import divar.service.AdvertisementService;
 import divar.specification.AdvertisementSpecification;
 import org.springframework.data.domain.*;
@@ -246,8 +248,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public AdvertisementResponse update(Long id, UpdateAdvertisementRequest request) {
 
-        Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
+        Advertisement advertisement = getAdvertisement(id);
+
+        checkOwner(advertisement);
 
         if (request.getTitle() != null && !request.getTitle().isBlank()) {
             advertisement.setTitle(request.getTitle());
@@ -264,7 +267,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (request.getCategoryId() != null) {
 
             Category category = categoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Category not found"));
 
             advertisement.setCategory(category);
         }
@@ -272,23 +276,46 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (request.getCityId() != null) {
 
             City city = cityRepository.findById(request.getCityId())
-                    .orElseThrow(() -> new ResourceNotFoundException("City not found"));
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("City not found"));
 
             advertisement.setCity(city);
         }
 
-        advertisementRepository.save(advertisement);
+        Advertisement updated = advertisementRepository.save(advertisement);
 
-        return mapToResponse(advertisement);
+        return mapToResponse(updated);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
 
-        Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
+        Advertisement advertisement = getAdvertisement(id);
+
+        checkOwner(advertisement);
 
         advertisementRepository.delete(advertisement);
+    }
+
+    private Advertisement getAdvertisement(Long id) {
+
+        return advertisementRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Advertisement not found"));
+    }
+
+    private void checkOwner(Advertisement advertisement) {
+
+        User currentUser =
+                (User) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+        if (!advertisement.getOwner().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException(
+                    "You are not allowed to modify this advertisement");
+        }
     }
 }
