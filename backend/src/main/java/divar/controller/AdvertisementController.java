@@ -6,6 +6,7 @@ import divar.dto.response.AdvertisementResponse;
 import divar.entity.User;
 import divar.enums.AdStatus;
 import divar.service.AdvertisementService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AdvertisementController {
 
     @PostMapping
     public AdvertisementResponse create(
-            @RequestBody CreateAdvertisementRequest request,
+            @Valid @RequestBody CreateAdvertisementRequest request,
             Authentication authentication) {
 
         System.out.println("=== CREATE ADVERTISEMENT ===");
@@ -40,7 +41,7 @@ public class AdvertisementController {
 
     @PostMapping("/search")
     public Page<AdvertisementResponse> search(
-            @RequestBody SearchAdvertisementRequest request) {
+            @Valid@RequestBody SearchAdvertisementRequest request) {
 
         return advertisementService.search(request);
     }
@@ -77,7 +78,7 @@ public class AdvertisementController {
 
     @PutMapping("/{id}")
     public AdvertisementResponse update(@PathVariable Long id,
-                                        @RequestBody UpdateAdvertisementRequest request) {
+                                        @Valid@RequestBody UpdateAdvertisementRequest request) {
         return advertisementService.update(id, request);
     }
 

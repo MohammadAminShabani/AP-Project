@@ -1,8 +1,16 @@
 package divar.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class CreateMessageRequest {
 
+    @NotNull(message = "Conversation id is required")
     private Long conversationId;
+
+    @NotBlank(message = "Message cannot be empty")
+    @Size(max = 1000, message = "Message is too long")
     private String content;
 
     public CreateMessageRequest() {
