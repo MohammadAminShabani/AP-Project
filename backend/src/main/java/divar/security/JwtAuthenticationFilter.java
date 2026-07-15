@@ -3,8 +3,8 @@ package divar.security;
 import divar.entity.User;
 import divar.repository.UserRepository;
 import divar.security.JwtService;
-import divar.entity.User;
-import divar.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +24,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private static final Logger logger =
+            LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
@@ -85,7 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
 
-            System.out.println("Invalid JWT Token");
+            logger.warn("Invalid JWT Token: {}", e.getMessage());
         }
 
 
