@@ -12,10 +12,7 @@ import divar.exception.BadRequestException;
 import divar.exception.NotFoundException;
 import divar.exception.ResourceNotFoundException;
 
-import divar.repository.AdvertisementRepository;
-import divar.repository.CategoryRepository;
-import divar.repository.CityRepository;
-import divar.repository.UserRepository;
+import divar.repository.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +22,16 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import java.util.UUID;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,17 +43,20 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final CityRepository cityRepository;
+    private final AdvertisementImageRepository advertisementImageRepository;
 
     public AdvertisementServiceImpl(
             AdvertisementRepository advertisementRepository,
             UserRepository userRepository,
             CategoryRepository categoryRepository,
-            CityRepository cityRepository) {
+            CityRepository cityRepository,
+            AdvertisementImageRepository advertisementImageRepository) {
 
         this.advertisementRepository = advertisementRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.cityRepository = cityRepository;
+        this.advertisementImageRepository = advertisementImageRepository;
     }
 
     private AdvertisementResponse mapToResponse(Advertisement advertisement) {
@@ -318,4 +327,72 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                     "You are not allowed to modify this advertisement");
         }
     }
+
+    @Override
+    @Transactional
+    public AdvertisementResponse uploadImage(Long advertisementId,
+                                             MultipartFile image) {
+
+        Advertisement advertisement = getAdvertisement(advertisementId);
+
+        checkOwner(advertisement);
+
+        try {
+
+            String fileName =
+                    UUID.randomUUID() + "_" + image.getOriginalFilename();
+
+            Path uploadPath = Paths.get("uploads");
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Files.copy(
+                    image.getInputStream(),
+                    uploadPath.resolve(fileName)
+            );
+
+            AdvertisementImage advertisementImage =
+                    new AdvertisementImage("/uploads/" + fileName, advertisement);
+
+            advertisement.addImage(advertisementImage);
+
+            advertisementRepository.save(advertisement);
+
+            return mapToResponse(advertisement);
+
+        } catch (IOException e) {
+
+            throw new RuntimeException("Failed to upload image");
+        }
+    }
+    @Override
+    @Transactional
+    public void deleteImage(Long imageId) {
+
+        AdvertisementImage image = advertisementImageRepository.findById(imageId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Image not found"));
+
+        checkOwner(image.getAdvertisement());
+
+        try {
+
+            Path file = Paths.get(
+                    "uploads",
+                    Paths.get(image.getImageUrl()).getFileName().toString()
+            );
+
+            Files.deleteIfExists(file);
+
+        } catch (IOException e) {
+
+            throw new ResourceNotFoundException("Failed to delete image");
+        }
+
+        advertisementImageRepository.delete(image);
+    }
+
+
 }
