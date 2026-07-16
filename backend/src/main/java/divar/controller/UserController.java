@@ -5,6 +5,7 @@ import divar.dto.request.RegisterRequest;
 import divar.dto.response.LoginResponse;
 import divar.dto.response.UserResponse;
 import divar.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody RegisterRequest request) {
+    public UserResponse register(@Valid @RequestBody RegisterRequest request) {
         return userService.register(request);
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
+    public LoginResponse login(@Valid@RequestBody LoginRequest request) {
         return userService.login(request);
     }
 

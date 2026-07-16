@@ -3,6 +3,7 @@ package divar.controller;
 import divar.dto.request.CreateMessageRequest;
 import divar.dto.response.MessageResponse;
 import divar.service.MessageService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class MessageController {
     @PostMapping("/{senderId}")
     public MessageResponse send(
             @PathVariable("senderId") Long senderId,
-            @RequestBody CreateMessageRequest request) {
+            @Valid @RequestBody CreateMessageRequest request) {
 
         return messageService.send(senderId, request);
     }

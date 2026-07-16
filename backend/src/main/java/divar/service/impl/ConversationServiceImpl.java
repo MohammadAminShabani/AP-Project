@@ -9,10 +9,13 @@ import divar.exception.BadRequestException;
 import divar.exception.ResourceNotFoundException;
 import divar.repository.AdvertisementRepository;
 import divar.repository.ConversationRepository;
+import divar.repository.MessageRepository;
 import divar.repository.UserRepository;
 import divar.service.ConversationService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,16 +26,20 @@ public class ConversationServiceImpl implements ConversationService {
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
+    private final MessageRepository messageRepository;
 
-    public ConversationServiceImpl(ConversationRepository conversationRepository,
-                                   UserRepository userRepository,
-                                   AdvertisementRepository advertisementRepository) {
+    public ConversationServiceImpl(
+            ConversationRepository conversationRepository,
+            UserRepository userRepository,
+            AdvertisementRepository advertisementRepository,
+            MessageRepository messageRepository) {
 
         this.conversationRepository = conversationRepository;
         this.userRepository = userRepository;
         this.advertisementRepository = advertisementRepository;
+        this.messageRepository = messageRepository;
     }
-
+    @Transactional
     @Override
     public ConversationResponse create(Long buyerId, Long sellerId, Long advertisementId) {
 
@@ -62,7 +69,7 @@ public class ConversationServiceImpl implements ConversationService {
 
         return toResponse(conversation, buyer);
     }
-
+    @Transactional
     @Override
     public ConversationResponse findById(Long id) {
 
@@ -71,7 +78,7 @@ public class ConversationServiceImpl implements ConversationService {
 
         return toResponse(conversation, conversation.getBuyer());
     }
-
+    @Transactional
     @Override
     public List<ConversationResponse> getUserConversations(Long userId) {
 
@@ -87,10 +94,12 @@ public class ConversationServiceImpl implements ConversationService {
         }
         return responses;
     }
-
-    private ConversationResponse toResponse(Conversation conversation, User currentUser) {
+    private ConversationResponse toResponse(
+            Conversation conversation,
+            User currentUser) {
 
         String otherUser;
+
         if (conversation.getBuyer().getId().equals(currentUser.getId())) {
             otherUser = conversation.getSeller().getUsername();
         } else {
@@ -98,23 +107,23 @@ public class ConversationServiceImpl implements ConversationService {
         }
 
         String lastMessage = "";
-        java.time.LocalDateTime lastMessageTime = null;
+        LocalDateTime lastMessageTime = null;
 
-        if (!conversation.getMessages().isEmpty()) {
+        Message message = messageRepository
+                .findFirstByConversationOrderBySentAtDesc(conversation)
+                .orElse(null);
 
-            Message message = conversation.getMessages()
-                    .stream()
-                    .max(Comparator.comparing(Message::getSentAt))
-                    .orElse(null);
-
-            if (message != null) {
-                lastMessage = message.getText();
-                lastMessageTime = message.getSentAt();
-            }
+        if (message != null) {
+            lastMessage = message.getText();
+            lastMessageTime = message.getSentAt();
         }
 
-        return new ConversationResponse(conversation.getId(),
+        return new ConversationResponse(
+                conversation.getId(),
                 conversation.getAdvertisement().getTitle(),
-                otherUser, lastMessage, lastMessageTime);
+                otherUser,
+                lastMessage,
+                lastMessageTime
+        );
     }
 }
