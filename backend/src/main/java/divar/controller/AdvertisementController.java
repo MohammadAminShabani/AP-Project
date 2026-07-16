@@ -6,11 +6,14 @@ import divar.dto.response.AdvertisementResponse;
 import divar.entity.User;
 import divar.enums.AdStatus;
 import divar.service.AdvertisementService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import divar.dto.request.SearchAdvertisementRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -75,14 +78,29 @@ public class AdvertisementController {
         return advertisementService.findByOwner(ownerId);
     }
 
+    @PostMapping("/{id}/images")
+    public ResponseEntity<AdvertisementResponse> uploadImage(
+            @PathVariable Long id,
+            @RequestParam("image") MultipartFile image) {
+
+        AdvertisementResponse response =
+                advertisementService.uploadImage(id, image);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
     public AdvertisementResponse update(@PathVariable Long id,
                                         @RequestBody UpdateAdvertisementRequest request) {
         return advertisementService.update(id, request);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        advertisementService.delete(id);
+    @DeleteMapping("/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(
+            @PathVariable Long imageId) {
+
+        advertisementService.deleteImage(imageId);
+
+        return ResponseEntity.noContent().build();
     }
 }
