@@ -56,6 +56,12 @@ public class Advertisement {
         images.add(image);
         image.setAdvertisement(this);
     }
+
+    public void removeImage(AdvertisementImage image) {
+        images.remove(image);
+        image.setAdvertisement(null);
+    }
+
     // --- Getters and Setters ---
 
     public Long getId() { return id; }
