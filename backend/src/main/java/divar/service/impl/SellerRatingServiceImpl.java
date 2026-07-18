@@ -6,6 +6,7 @@ import divar.dto.response.SellerRatingResponse;
 import divar.entity.Advertisement;
 import divar.entity.SellerRating;
 import divar.entity.User;
+import divar.enums.AdStatus;
 import divar.exception.BadRequestException;
 import divar.exception.ResourceNotFoundException;
 import divar.repository.AdvertisementRepository;
@@ -42,7 +43,11 @@ public class SellerRatingServiceImpl implements SellerRatingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         User seller = advertisement.getOwner();
+        if (advertisement.getStatus() != AdStatus.SOLD) {
 
+            throw new BadRequestException(
+                    "You can rate seller only after advertisement is sold.");
+        }
         if (buyer.getId().equals(seller.getId())) {
             throw new BadRequestException("You cannot rate yourself");}
 

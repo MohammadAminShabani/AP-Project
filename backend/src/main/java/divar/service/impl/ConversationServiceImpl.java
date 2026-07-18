@@ -10,90 +10,113 @@ import divar.exception.ResourceNotFoundException;
 import divar.repository.AdvertisementRepository;
 import divar.repository.ConversationRepository;
 import divar.repository.MessageRepository;
-import divar.repository.UserRepository;
 import divar.service.ConversationService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class ConversationServiceImpl implements ConversationService {
 
     private final ConversationRepository conversationRepository;
-    private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
     private final MessageRepository messageRepository;
 
     public ConversationServiceImpl(
             ConversationRepository conversationRepository,
-            UserRepository userRepository,
             AdvertisementRepository advertisementRepository,
             MessageRepository messageRepository) {
 
         this.conversationRepository = conversationRepository;
-        this.userRepository = userRepository;
         this.advertisementRepository = advertisementRepository;
         this.messageRepository = messageRepository;
     }
-    @Transactional
+
     @Override
-    public ConversationResponse create(Long buyerId, Long sellerId, Long advertisementId) {
+    @Transactional
+    public ConversationResponse create(Long advertisementId) {
 
-        User buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User seller = userRepository.findById(sellerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
+        if (authentication == null || !(authentication.getPrincipal() instanceof User buyer)) {
+
+            throw new AccessDeniedException("Unauthorized");
+        }
 
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
                 .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
+        User seller = advertisement.getOwner();
+
         if (buyer.getId().equals(seller.getId())) {
-            throw new BadRequestException("You cannot create conversation with yourself.");
+            throw new BadRequestException(
+                    "You cannot create conversation with yourself.");
         }
 
-        Conversation oldConversation =
-                conversationRepository
-                        .findByBuyerAndAdvertisement(buyer, advertisement).orElse(null);
+        Conversation oldConversation = conversationRepository
+                        .findByBuyerAndAdvertisement(buyer, advertisement)
+                        .orElse(null);
 
         if (oldConversation != null) {
             return toResponse(oldConversation, buyer);
         }
 
-        Conversation conversation = new Conversation(buyer, seller, advertisement);
+        Conversation conversation =
+                new Conversation(buyer, seller, advertisement);
+
         conversationRepository.save(conversation);
 
         return toResponse(conversation, buyer);
     }
-    @Transactional
+
     @Override
+    @Transactional
     public ConversationResponse findById(Long id) {
 
         Conversation conversation = conversationRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Conversation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found"));
 
-        return toResponse(conversation, conversation.getBuyer());
-    }
-    @Transactional
-    @Override
-    public List<ConversationResponse> getUserConversations(Long userId) {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (authentication == null || !(authentication.getPrincipal() instanceof User currentUser)) {
 
-        List<Conversation> conversations = conversationRepository.findByBuyerOrSeller(user, user);
-
-        List<ConversationResponse> responses = new ArrayList<>();
-
-        for (Conversation conversation : conversations) {
-            responses.add(toResponse(conversation, user));
+            throw new AccessDeniedException("Unauthorized");
         }
-        return responses;
+
+        boolean allowed = conversation.getBuyer().getId().equals(currentUser.getId())
+                        || conversation.getSeller().getId().equals(currentUser.getId());
+
+        if (!allowed) {throw new AccessDeniedException(
+                    "You are not allowed to access this conversation.");
+        }
+        return toResponse(conversation, currentUser);
     }
+
+    @Override
+    @Transactional
+    public List<ConversationResponse> getUserConversations() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof User currentUser)) {
+
+            throw new AccessDeniedException("Unauthorized");
+        }
+
+        return conversationRepository
+                .findByBuyerOrSeller(currentUser, currentUser)
+                .stream()
+                .map(conversation -> toResponse(conversation, currentUser))
+                .toList();
+    }
+
     private ConversationResponse toResponse(
             Conversation conversation,
             User currentUser) {
@@ -110,8 +133,7 @@ public class ConversationServiceImpl implements ConversationService {
         LocalDateTime lastMessageTime = null;
 
         Message message = messageRepository
-                .findFirstByConversationOrderBySentAtDesc(conversation)
-                .orElse(null);
+                .findFirstByConversationOrderBySentAtDesc(conversation).orElse(null);
 
         if (message != null) {
             lastMessage = message.getText();

@@ -1,6 +1,8 @@
 package divar.dto.request;
 
 import divar.enums.AdStatus;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 public class SearchAdvertisementRequest {
 
@@ -12,14 +14,16 @@ public class SearchAdvertisementRequest {
 
     private AdStatus status;
 
+    @PositiveOrZero
     private Double minPrice;
 
+    @PositiveOrZero
     private Double maxPrice;
 
     private String sort = "newest";
-
+    @PositiveOrZero
     private Integer page = 0;
-
+    @Positive
     private Integer size = 10;
 
     public SearchAdvertisementRequest() {

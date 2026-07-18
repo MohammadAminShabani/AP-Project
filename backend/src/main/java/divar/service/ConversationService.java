@@ -6,12 +6,9 @@ import java.util.List;
 
 public interface ConversationService {
 
-    ConversationResponse create(Long buyerId,
-                                Long sellerId,
-                                Long advertisementId);
+    ConversationResponse create(Long advertisementId);
 
     ConversationResponse findById(Long id);
 
-    List<ConversationResponse> getUserConversations(Long userId);
-
+    List<ConversationResponse> getUserConversations();
 }

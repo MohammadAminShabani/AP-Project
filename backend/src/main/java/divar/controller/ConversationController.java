@@ -18,24 +18,21 @@ public class ConversationController {
 
     @PostMapping
     public ConversationResponse create(
-            @RequestParam("buyerId") Long buyerId,
-            @RequestParam("sellerId") Long sellerId,
-            @RequestParam("advertisementId") Long advertisementId) {
+            @RequestParam Long advertisementId) {
 
-        return conversationService.create(buyerId, sellerId, advertisementId);
+        return conversationService.create(advertisementId);
     }
 
     @GetMapping("/{id}")
     public ConversationResponse findById(
-            @PathVariable("id") Long id) {
+            @PathVariable Long id) {
 
         return conversationService.findById(id);
     }
 
-    @GetMapping("/user/{userId}")
-    public List<ConversationResponse> getUserConversations(
-            @PathVariable("userId") Long userId) {
+    @GetMapping
+    public List<ConversationResponse> getUserConversations() {
 
-        return conversationService.getUserConversations(userId);
+        return conversationService.getUserConversations();
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MessageService {
 
-    MessageResponse send(Long senderId, CreateMessageRequest request);
+    MessageResponse send(CreateMessageRequest request);
 
     List<MessageResponse> getByConversation(Long conversationId);
 

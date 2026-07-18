@@ -330,17 +330,31 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     @Transactional
-    public AdvertisementResponse uploadImage(Long advertisementId,
-                                             MultipartFile image) {
+    public AdvertisementResponse uploadImage(Long advertisementId, MultipartFile image) {
 
         Advertisement advertisement = getAdvertisement(advertisementId);
 
         checkOwner(advertisement);
 
         try {
+            List<String> allowed = List.of(
 
-            String fileName =
-                    UUID.randomUUID() + "_" + image.getOriginalFilename();
+                    "image/jpeg",
+                    "image/png",
+                    "image/jpg",
+                    "image/webp"
+            );
+
+            if (!allowed.contains(image.getContentType())) {
+
+                throw new BadRequestException(
+                        "Unsupported image format.");
+            }
+            if (image.getSize() > 5 * 1024 * 1024) {
+
+                throw new BadRequestException("Maximum file size is 5MB.");
+            }
+            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
 
             Path uploadPath = Paths.get("uploads");
 
@@ -348,8 +362,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 Files.createDirectories(uploadPath);
             }
 
-            Files.copy(
-                    image.getInputStream(),
+            Files.copy(image.getInputStream(),
                     uploadPath.resolve(fileName)
             );
 
@@ -372,17 +385,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public void deleteImage(Long imageId) {
 
         AdvertisementImage image = advertisementImageRepository.findById(imageId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Image not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
 
         checkOwner(image.getAdvertisement());
 
         try {
 
-            Path file = Paths.get(
-                    "uploads",
-                    Paths.get(image.getImageUrl()).getFileName().toString()
-            );
+            Path file = Paths.get("uploads",
+                    Paths.get(image.getImageUrl()).getFileName().toString());
 
             Files.deleteIfExists(file);
 
@@ -390,7 +400,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
             throw new ResourceNotFoundException("Failed to delete image");
         }
+        Advertisement advertisement = image.getAdvertisement();
 
+        advertisement.getImages().remove(image);
         advertisementImageRepository.delete(image);
     }
 
