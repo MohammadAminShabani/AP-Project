@@ -1,0 +1,26 @@
+package divar.dto.request;
+
+public class CreateMessageRequest {
+
+    private Long conversationId;
+    private String content;
+
+    public CreateMessageRequest() {
+    }
+
+    public Long getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(Long conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+}
