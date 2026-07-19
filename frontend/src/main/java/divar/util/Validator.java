@@ -11,8 +11,10 @@ public class Validator {
 
     public static boolean validPhone(String phone){
 
-        return phone.matches("^09\\d{9}$");
-    }
+        if (phone == null)
+            return false;
+
+        return phone.matches("^09\\d{9}$");    }
 
     public static boolean validEmail(String email){
 
@@ -21,5 +23,8 @@ public class Validator {
 
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
+    public static boolean validPassword(String password){
 
+        return password != null && password.length() >= 6;
+    }
 }

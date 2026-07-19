@@ -1,6 +1,7 @@
 package divar;
 
 import divar.config.SceneManager;
+import divar.util.Constants;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -10,8 +11,7 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws Exception {
 
         SceneManager.setStage(stage);
-        SceneManager.loadScene("login.fxml", "Divar");
-
+        SceneManager.loadScene(Constants.LOGIN, "Divar");
     }
 
     public static void main(String[] args) {

@@ -56,5 +56,8 @@ public class SessionManager {
         username=null;
         role=null;
     }
+    public static boolean isAdmin() {
 
+        return "ADMIN".equals(role);
+    }
 }

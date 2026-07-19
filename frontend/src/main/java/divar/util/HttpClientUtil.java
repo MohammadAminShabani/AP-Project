@@ -22,7 +22,24 @@ public class HttpClientUtil {
         return client.send(request,
                 HttpResponse.BodyHandlers.ofString()).body();
     }
+    public static String getWithToken(String url)
+            throws IOException, InterruptedException {
 
+        HttpRequest request =
+                HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header(
+                                "Authorization",
+                                "Bearer " + SessionManager.getToken()
+                        )
+                        .GET()
+                        .build();
+
+        return client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString()
+        ).body();
+    }
     public static String post(String url,String json)
             throws IOException, InterruptedException {
 
@@ -33,5 +50,17 @@ public class HttpClientUtil {
 
         return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
     }
+    public static String postWithToken(String url, String json)
+            throws IOException, InterruptedException {
 
+        HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Content-Type","application/json")
+                        .header("Authorization", "Bearer " + SessionManager.getToken())
+                        .POST(HttpRequest.BodyPublishers.ofString(json))
+                        .build();
+
+        return client.send(request,
+                HttpResponse.BodyHandlers.ofString()).body();
+    }
 }
