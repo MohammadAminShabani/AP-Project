@@ -3,7 +3,6 @@ package divar.network;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import divar.config.AppConfig;
 import divar.session.SessionManager;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -97,7 +96,7 @@ public class ApiClient {
 
     /**
      * Returns the body if the response was successful (2xx).
-     * Otherwise throws an ApiException with a clean, human-readable
+     * Otherwise, throws an ApiException with a clean, human-readable
      * message extracted from the backend's error body.
      */
     private static String unwrap(HttpResponse<String> response) throws ApiException {
