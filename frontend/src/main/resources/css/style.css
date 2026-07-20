@@ -1,0 +1,310 @@
+/* =====================================================
+   DIVAR THEME
+===================================================== */
+
+
+
+.root{
+    -fx-font-family:"Vazirmatn";
+}
+
+/* =====================================================
+   LEFT PANEL
+===================================================== */
+
+.left-panel{
+    -fx-background-color: linear-gradient(to bottom,#A62626,#8F1F1F);
+    -fx-background-radius: 20;
+}
+
+.logo{
+    -fx-font-size: 56px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.logo-subtitle{
+    -fx-font-size:18px;
+    -fx-text-fill:white;
+    -fx-opacity:.85;
+}
+
+.big-text{
+    -fx-font-size:28px;
+    -fx-font-weight:bold;
+    -fx-text-fill:white;
+}
+
+.small-text{
+    -fx-font-size:15px;
+    -fx-text-fill:white;
+    -fx-opacity:.85;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card{
+
+    -fx-background-color:white;
+
+    -fx-background-radius:22;
+
+    -fx-border-radius:22;
+
+    -fx-effect:dropshadow(
+
+            gaussian,
+
+            rgba(0,0,0,.18),
+
+            25,
+
+            0,
+
+            0,
+
+            5
+
+    );
+
+}
+
+/* =====================================================
+   TITLES
+===================================================== */
+
+.title{
+
+    -fx-font-size:30px;
+
+    -fx-font-weight:bold;
+
+    -fx-text-fill:#333333;
+
+}
+
+.subtitle{
+
+    -fx-font-size:14px;
+
+    -fx-text-fill:#777777;
+
+}
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.text-field,
+.password-field{
+
+    -fx-pref-width:320;
+
+    -fx-pref-height:48;
+
+    -fx-font-size:15;
+
+    -fx-background-color:white;
+
+    -fx-background-radius:12;
+
+    -fx-border-radius:12;
+
+    -fx-border-color:#DDDDDD;
+
+    -fx-border-width:1.5;
+
+}
+
+.text-field:hover,
+.password-field:hover{
+
+    -fx-border-color:#BBBBBB;
+
+}
+
+.text-field:focused,
+.password-field:focused{
+
+    -fx-border-color:#A62626;
+
+    -fx-effect:dropshadow(
+
+            gaussian,
+
+            rgba(166,38,38,.18),
+
+            12,
+
+            0,
+
+            0,
+
+            2
+
+    );
+
+}
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.button{
+
+    -fx-pref-width:320;
+
+    -fx-pref-height:48;
+
+    -fx-background-radius:12;
+
+    -fx-background-color:#A62626;
+
+    -fx-text-fill:white;
+
+    -fx-font-size:15;
+
+    -fx-font-weight:bold;
+
+    -fx-cursor:hand;
+
+}
+
+.button:hover{
+
+    -fx-background-color:#8F1F1F;
+
+}
+
+.button:pressed{
+
+    -fx-background-color:#731717;
+
+}
+
+/* =====================================================
+   LINK
+===================================================== */
+
+.hyperlink{
+
+    -fx-text-fill:#A62626;
+
+    -fx-border-color:transparent;
+
+    -fx-font-size:13;
+
+}
+
+.hyperlink:hover{
+
+    -fx-underline:true;
+
+}
+
+/* =====================================================
+   SECONDARY / OUTLINE BUTTON
+===================================================== */
+
+.button-secondary{
+
+    -fx-background-color:transparent;
+
+    -fx-text-fill:#A62626;
+
+    -fx-border-color:#A62626;
+
+    -fx-border-width:1.5;
+
+    -fx-border-radius:12;
+
+    -fx-background-radius:12;
+
+}
+
+.button-secondary:hover{
+
+    -fx-background-color:rgba(166,38,38,.06);
+
+}
+
+.button-secondary:pressed{
+
+    -fx-background-color:rgba(166,38,38,.12);
+
+}
+
+/* =====================================================
+   DISABLED BUTTON (loading state)
+===================================================== */
+
+.button:disabled{
+
+    -fx-opacity:.65;
+
+    -fx-cursor:default;
+
+}
+
+/* =====================================================
+   SCROLL PANE (transparent, no border)
+===================================================== */
+
+.form-scroll,
+.form-scroll .viewport{
+
+    -fx-background-color:transparent;
+
+    -fx-background:transparent;
+
+}
+
+.form-scroll{
+
+    -fx-border-color:transparent;
+
+    -fx-padding:0;
+
+}
+
+.form-scroll .scroll-bar:vertical{
+
+    -fx-pref-width:8;
+
+    -fx-background-color:transparent;
+
+}
+
+/* =====================================================
+   SMALL FIELD LABEL (register form field captions)
+===================================================== */
+
+.field-label{
+
+    -fx-font-size:12px;
+
+    -fx-text-fill:#888888;
+
+    -fx-padding:0 0 0 4;
+
+}
+
+/* =====================================================
+   LABELS
+===================================================== */
+
+.error{
+
+    -fx-text-fill:#D32F2F;
+
+    -fx-font-size:13;
+
+}
+
+.success{
+
+    -fx-text-fill:#2E7D32;
+
+}
