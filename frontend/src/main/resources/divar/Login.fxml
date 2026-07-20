@@ -1,14 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.LoginController"
+            prefWidth="1200"
+            prefHeight="700"
+            stylesheets="@../css/style.css">
 
-</AnchorPane>
+    <left>
+
+        <AnchorPane prefWidth="500"
+                    styleClass="left-panel">
+
+            <children>
+
+                <VBox alignment="CENTER"
+                      spacing="20"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0">
+
+                    <Label
+                            text="دیوار"
+                            styleClass="logo"/>
+
+                    <Label
+                            text="خرید و فروش بدون واسطه"
+                            styleClass="logo-subtitle"/>
+
+                    <Separator prefWidth="250"/>
+
+                    <Label
+                            text="به دیوار خوش آمدید"
+                            styleClass="big-text"/>
+
+                    <Label
+                            wrapText="true"
+                            maxWidth="330"
+                            textAlignment="CENTER"
+                            text="آگهی ثبت کن، جستجو کن، خرید و فروش کن."
+                            styleClass="small-text"/>
+
+                </VBox>
+
+            </children>
+
+        </AnchorPane>
+
+    </left>
+
+    <center>
+
+        <StackPane>
+
+            <children>
+
+                <VBox alignment="CENTER"
+                      spacing="18"
+                      maxWidth="420"
+                      styleClass="card">
+
+                    <padding>
+
+                        <Insets top="45"
+                                right="45"
+                                bottom="45"
+                                left="45"/>
+
+                    </padding>
+
+                    <Label
+                            text="ورود به حساب"
+                            styleClass="title"/>
+
+                    <Label
+                            text="نام کاربری و رمز عبور خود را وارد کنید"
+                            styleClass="subtitle"/>
+
+                    <TextField
+                            fx:id="usernameField"
+                            promptText="نام کاربری"/>
+
+                    <PasswordField
+                            fx:id="passwordField"
+                            promptText="رمز عبور"/>
+
+                    <Button
+                            fx:id="loginButton"
+                            text="ورود"
+                            onAction="#login"/>
+
+                    <Label
+                            fx:id="messageLabel"
+                            styleClass="error"/>
+
+                    <Hyperlink
+                            text="حساب کاربری ندارید؟ ثبت نام"
+                            onAction="#goToRegister"/>
+
+                </VBox>
+
+            </children>
+
+        </StackPane>
+
+    </center>
+
+</BorderPane>
