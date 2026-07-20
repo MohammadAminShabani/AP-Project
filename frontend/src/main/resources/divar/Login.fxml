@@ -84,11 +84,13 @@
 
                     <TextField
                             fx:id="usernameField"
-                            promptText="نام کاربری"/>
+                            promptText="نام کاربری"
+                            onAction="#login"/>
 
                     <PasswordField
                             fx:id="passwordField"
-                            promptText="رمز عبور"/>
+                            promptText="رمز عبور"
+                            onAction="#login"/>
 
                     <Button
                             fx:id="loginButton"

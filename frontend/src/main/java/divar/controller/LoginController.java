@@ -3,7 +3,6 @@ package divar.controller;
 import divar.config.SceneManager;
 import divar.dto.response.LoginResponse;
 import divar.network.ApiException;
-import divar.network.TokenManager;
 import divar.service.AuthService;
 import divar.util.Constants;
 import divar.util.SessionManager;
@@ -48,7 +47,7 @@ public class LoginController {
         try {
             LoginResponse response = authService.login(username, password);
 
-            TokenManager.saveToken(response.getToken());
+            SessionManager.setToken(response.getToken());
 
             SessionManager.setToken(response.getToken());
             SessionManager.setUserId(response.getUserId());

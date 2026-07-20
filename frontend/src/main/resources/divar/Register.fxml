@@ -119,7 +119,8 @@
 
                                 <PasswordField
                                         fx:id="confirmPasswordField"
-                                        promptText="تکرار رمز عبور"/>
+                                        promptText="تکرار رمز عبور"
+                                        onAction="#register"/>
 
                             </VBox>
 
