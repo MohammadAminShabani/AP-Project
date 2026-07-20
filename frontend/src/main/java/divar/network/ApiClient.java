@@ -2,6 +2,7 @@ package divar.network;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import divar.config.AppConfig;
+import divar.session.SessionManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -87,7 +88,7 @@ public class ApiClient {
 
     private static void addAuthorization(HttpRequest.Builder builder) {
 
-        String token = TokenManager.getToken();
+        String token = SessionManager.getToken();
 
         if (token != null && !token.isBlank()) {
             builder.header("Authorization", "Bearer " + token);
