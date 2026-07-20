@@ -16,10 +16,11 @@ public class Validator {
 
         return phone.matches("^09\\d{9}$");    }
 
-    public static boolean validEmail(String email){
+    public static boolean validEmail(String email) {
 
-        if(email==null || email.isBlank())
-            return true;
+        if (email == null || email.isBlank()) {
+            return false;
+        }
 
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
