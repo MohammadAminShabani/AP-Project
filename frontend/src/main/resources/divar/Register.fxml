@@ -1,14 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.RegisterController"
+            prefWidth="1200"
+            prefHeight="700"
+            stylesheets="@../css/style.css">
 
-</AnchorPane>
+    <left>
+
+        <AnchorPane prefWidth="500"
+                    styleClass="left-panel">
+
+            <children>
+
+                <VBox alignment="CENTER"
+                      spacing="20"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0">
+
+                    <Label
+                            text="دیوار"
+                            styleClass="logo"/>
+
+                    <Label
+                            text="خرید و فروش بدون واسطه"
+                            styleClass="logo-subtitle"/>
+
+                    <Separator prefWidth="250"/>
+
+                    <Label
+                            text="به جمع ما بپیوندید"
+                            styleClass="big-text"/>
+
+                    <Label
+                            wrapText="true"
+                            maxWidth="330"
+                            textAlignment="CENTER"
+                            text="در چند ثانیه حساب کاربری بساز و اولین آگهی خودت را ثبت کن."
+                            styleClass="small-text"/>
+
+                </VBox>
+
+            </children>
+
+        </AnchorPane>
+
+    </left>
+
+    <center>
+
+        <StackPane>
+
+            <children>
+
+                <VBox alignment="CENTER"
+                      spacing="16"
+                      maxWidth="420"
+                      maxHeight="620"
+                      styleClass="card">
+
+                    <padding>
+
+                        <Insets top="40"
+                                right="45"
+                                bottom="40"
+                                left="45"/>
+
+                    </padding>
+
+                    <Label
+                            text="ساخت حساب کاربری"
+                            styleClass="title"/>
+
+                    <Label
+                            text="اطلاعات زیر را برای ثبت نام وارد کنید"
+                            styleClass="subtitle"/>
+
+                    <ScrollPane fitToWidth="true"
+                                styleClass="form-scroll"
+                                hbarPolicy="NEVER"
+                                VBox.vgrow="ALWAYS">
+
+                        <content>
+
+                            <VBox spacing="14"
+                                  alignment="CENTER">
+
+                                <padding>
+                                    <Insets top="6" right="2" bottom="6" left="2"/>
+                                </padding>
+
+                                <TextField
+                                        fx:id="fullNameField"
+                                        promptText="نام و نام خانوادگی"/>
+
+                                <TextField
+                                        fx:id="usernameField"
+                                        promptText="نام کاربری"/>
+
+                                <TextField
+                                        fx:id="phoneField"
+                                        promptText="شماره تماس (مثال: 09123456789)"/>
+
+                                <TextField
+                                        fx:id="emailField"
+                                        promptText="ایمیل"/>
+
+                                <PasswordField
+                                        fx:id="passwordField"
+                                        promptText="رمز عبور"/>
+
+                                <PasswordField
+                                        fx:id="confirmPasswordField"
+                                        promptText="تکرار رمز عبور"/>
+
+                            </VBox>
+
+                        </content>
+
+                    </ScrollPane>
+
+                    <Button
+                            fx:id="registerButton"
+                            text="ثبت نام"
+                            onAction="#register"/>
+
+                    <Label
+                            fx:id="messageLabel"
+                            wrapText="true"
+                            maxWidth="330"
+                            textAlignment="CENTER"
+                            styleClass="error"/>
+
+                    <Hyperlink
+                            text="حساب کاربری دارید؟ ورود"
+                            onAction="#goToLogin"/>
+
+                </VBox>
+
+            </children>
+
+        </StackPane>
+
+    </center>
+
+</BorderPane>
