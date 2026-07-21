@@ -33,10 +33,10 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void add(Long userId, Long advertisementId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                new ResourceNotFoundException("User not found"));
 
         Advertisement advertisement = advertisementRepository.findById(advertisementId).orElseThrow(() ->
-                        new ResourceNotFoundException("Advertisement not found"));
+                new ResourceNotFoundException("Advertisement not found"));
 
         if (favoriteRepository.existsByUserAndAdvertisement(user, advertisement)) {
             throw new BadRequestException("Advertisement already added to favorites");
@@ -50,13 +50,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     public void remove(Long userId, Long advertisementId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                new ResourceNotFoundException("User not found"));
 
         Advertisement advertisement = advertisementRepository.findById(advertisementId).orElseThrow(() ->
-                        new ResourceNotFoundException("Advertisement not found"));
+                new ResourceNotFoundException("Advertisement not found"));
 
         Favorite favorite = favoriteRepository.findByUserAndAdvertisement(user, advertisement).orElseThrow(() ->
-                        new ResourceNotFoundException("Favorite not found"));
+                new ResourceNotFoundException("Favorite not found"));
 
         favoriteRepository.delete(favorite);
     }
@@ -66,7 +66,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     public List<AdvertisementResponse> getUserFavorites(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+                new ResourceNotFoundException("User not found"));
 
         return favoriteRepository.findByUser(user)
                 .stream()
@@ -91,12 +91,13 @@ public class FavoriteServiceImpl implements FavoriteService {
 
                     if (advertisement.getOwner() != null) {
                         response.setOwnerName(advertisement.getOwner().getFullName());
+                        response.setOwnerId(advertisement.getOwner().getId());
                         response.setAverageRate(advertisement.getOwner().getAverageRating());}
 
                     response.setImageUrls(advertisement.getImages()
-                                    .stream()
-                                    .map(AdvertisementImage::getImageUrl)
-                                    .toList());
+                            .stream()
+                            .map(AdvertisementImage::getImageUrl)
+                            .toList());
                     return response;})
                 .toList();
     }
