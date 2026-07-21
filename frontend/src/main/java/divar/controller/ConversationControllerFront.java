@@ -1,19 +1,17 @@
 package divar.controller;
 
+import divar.config.SceneManager;
 import divar.dto.response.ConversationResponse;
 import divar.service.ConversationService;
+import divar.session.ConversationSession;
+import divar.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 import java.util.List;
 
 public class ConversationControllerFront {
@@ -99,36 +97,12 @@ public class ConversationControllerFront {
 
             return;
         }
+            ConversationSession.setConversation(conversation);
 
-        try {
-
-            FXMLLoader loader =
-                    new FXMLLoader(getClass()
-                            .getResource("/fxml/Chat.fxml"));
-
-            Scene scene =
-                    new Scene(loader.load());
-
-            MessageControllerFront controller =
-                    loader.getController();
-
-            controller.setConversation(
-                    conversation.getId(),
-                    conversation.getOtherUser());
-
-            Stage stage =
-                    new Stage();
-
-            stage.setTitle("Chat");
-
-            stage.setScene(scene);
-
-            stage.show();
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
+            SceneManager.loadScene(
+                    Constants.CHAT,
+                    "گفتگو"
+            );
 
     }
 

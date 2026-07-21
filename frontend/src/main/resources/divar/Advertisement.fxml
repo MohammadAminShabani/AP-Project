@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="divar.controller.AdvertisementController" prefWidth="1050" prefHeight="700"
+            fx:controller="divar.controller.AdvertisementControllerFront" prefWidth="1050" prefHeight="700"
             stylesheets="@../css/style.css">
     <top>
         <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
@@ -39,6 +39,12 @@
                             <Label fx:id="ownerLabel" styleClass="seller-name" wrapText="true"/>
                             <Label fx:id="rateLabel" styleClass="seller-rate"/>
                             <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
+                            <Button
+                                    fx:id="chatButton"
+                                    text="💬 گفتگو با فروشنده"
+                                    onAction="#openConversation"
+                                    styleClass="primary-button"
+                                    maxWidth="Infinity"/>
                         </VBox>
                     </HBox>
                     <HBox fx:id="ownerActionsBox" spacing="10" alignment="CENTER_RIGHT" managed="false" visible="false" styleClass="actions-bar">

@@ -6,6 +6,8 @@ import divar.service.MessageService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import divar.dto.response.ConversationResponse;
+import divar.session.ConversationSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -30,18 +32,19 @@ public class MessageControllerFront {
 
     private Long conversationId;
 
-    public void setConversation(Long conversationId,
-                                String username) {
-
-        this.conversationId = conversationId;
-
-        lblUser.setText(username);
-
-        loadMessages();
-    }
-
     @FXML
     public void initialize() {
+
+        ConversationResponse conversation =
+                ConversationSession.getConversation();
+
+        if (conversation == null) {
+            return;
+        }
+
+        conversationId = conversation.getId();
+
+        lblUser.setText(conversation.getOtherUser());
 
         messageList.setCellFactory(param ->
                 new ListCell<>() {
@@ -53,25 +56,15 @@ public class MessageControllerFront {
                         super.updateItem(item, empty);
 
                         if (empty || item == null) {
-
                             setText(null);
-
                         } else {
-
-                            String text =
-                                    item.getSender()
-                                            + " : "
-                                            + item.getContent();
-
-                            setText(text);
+                            setText(item.getSender() + " : " + item.getContent());
                         }
-
                     }
-
                 });
 
+        loadMessages();
     }
-
     private void loadMessages() {
 
         try {

@@ -4,7 +4,10 @@ import divar.config.SceneManager;
 import divar.dto.response.AdvertisementResponse;
 import divar.network.ApiException;
 import divar.service.AdvertisementService;
+import divar.service.ConversationService;
+import divar.dto.response.ConversationResponse;
 import divar.session.AdvertisementSession;
+import divar.session.ConversationSession;
 import divar.session.SessionManager;
 import divar.util.Constants;
 import javafx.fxml.FXML;
@@ -16,7 +19,7 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 
-public class AdvertisementController {
+public class AdvertisementControllerFront {
 
     @FXML
     private Label titleLabel;
@@ -51,9 +54,12 @@ public class AdvertisementController {
     @FXML
     private Button markSoldButton;
 
+    @FXML
+    private Button chatButton;
     private final AdvertisementService advertisementService =
             new AdvertisementService();
-
+    private final ConversationService conversationService =
+            new ConversationService();
     private AdvertisementResponse advertisement;
 
     @FXML
@@ -96,7 +102,8 @@ public class AdvertisementController {
 
         ownerActionsBox.setVisible(isOwner);
         ownerActionsBox.setManaged(isOwner);
-
+        chatButton.setVisible(!isOwner);
+        chatButton.setManaged(!isOwner);
         // فقط آگهی فعال قابل تغییر وضعیت به «فروخته شد» است.
         boolean canMarkSold = isOwner && "ACTIVE".equals(advertisement.getStatus());
 
@@ -190,7 +197,34 @@ public class AdvertisementController {
             showMessage("امکان اتصال به سرور وجود ندارد.");
         }
     }
+    @FXML
+    private void openConversation() {
 
+        try {
+
+            ConversationResponse conversation =
+                    conversationService.createConversation(
+                            advertisement.getId()
+                    );
+
+            ConversationSession.setConversation(conversation);
+
+            SceneManager.loadScene(
+                    Constants.CHAT,
+                    "گفتگو"
+            );
+
+        } catch (ApiException e) {
+
+            showMessage(e.getMessage());
+
+        } catch (IOException | InterruptedException e) {
+
+            showMessage("ارتباط با سرور برقرار نشد.");
+
+        }
+
+    }
     private void showMessage(String message) {
 
         if (messageLabel != null) {

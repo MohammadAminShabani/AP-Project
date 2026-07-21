@@ -26,5 +26,17 @@ public class ConversationService {
                 new TypeReference<List<ConversationResponse>>() {}
         );
     }
+    public ConversationResponse createConversation(Long advertisementId)
+            throws IOException, InterruptedException, ApiException {
 
+        String response = ApiClient.post(
+                        Constants.CONVERSATION_API +
+                                "?advertisementId=" + advertisementId,
+                        "");
+
+        return mapper.readValue(
+                response,
+                ConversationResponse.class
+        );
+    }
 }
