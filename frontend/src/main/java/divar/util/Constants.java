@@ -30,27 +30,12 @@ public final class Constants {
     // API Endpoints
     // =======================
 
-    public static final String LOGIN_API =
-            BASE_URL + "/api/users/login";
-
-    public static final String REGISTER_API =
-            BASE_URL + "/api/users/register";
-
-    public static final String ADVERTISEMENT_API =
-            BASE_URL + "/api/advertisements";
-
-    public static final String FAVORITE_API =
-            BASE_URL + "/api/favorites";
-
-    public static final String CONVERSATION_API =
-            BASE_URL + "/api/conversations";
-
-    public static final String MESSAGE_API =
-            BASE_URL + "/api/messages";
-
-    public static final String RATING_API =
-            BASE_URL + "/api/ratings";
-
-    public static final String ADMIN_API =
-            BASE_URL + "/api/admin";
+    public static final String LOGIN_API = "/users/login";
+    public static final String REGISTER_API = "/users/register";
+    public static final String ADVERTISEMENT_API = "/advertisements";
+    public static final String FAVORITE_API = "/favorites";
+    public static final String CONVERSATION_API = "/conversations";
+    public static final String MESSAGE_API = "/messages";
+    public static final String RATING_API = "/ratings";
+    public static final String ADMIN_API = "/admin";
 }

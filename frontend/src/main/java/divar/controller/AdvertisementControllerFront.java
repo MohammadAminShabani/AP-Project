@@ -64,6 +64,7 @@ public class AdvertisementControllerFront {
 
     @FXML
     public void initialize() {
+        System.out.println("AdvertisementControllerFront initialized");
 
         advertisement = AdvertisementSession.getAdvertisement();
 
@@ -200,31 +201,27 @@ public class AdvertisementControllerFront {
     @FXML
     private void openConversation() {
 
+        System.out.println("Button clicked");
+
         try {
 
             ConversationResponse conversation =
-                    conversationService.createConversation(
-                            advertisement.getId()
-                    );
+                    conversationService.createConversation(advertisement.getId());
+
+            System.out.println("Conversation created");
 
             ConversationSession.setConversation(conversation);
 
-            SceneManager.loadScene(
-                    Constants.CHAT,
-                    "گفتگو"
-            );
+            SceneManager.loadScene(Constants.CHAT, "گفتگو");
 
-        } catch (ApiException e) {
+        } catch (Exception e) {
+
+            e.printStackTrace();
 
             showMessage(e.getMessage());
-
-        } catch (IOException | InterruptedException e) {
-
-            showMessage("ارتباط با سرور برقرار نشد.");
-
         }
-
     }
+
     private void showMessage(String message) {
 
         if (messageLabel != null) {

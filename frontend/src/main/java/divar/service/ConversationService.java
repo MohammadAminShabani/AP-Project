@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ConversationService {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     public List<ConversationResponse> getMyConversations()
             throws IOException, InterruptedException, ApiException {

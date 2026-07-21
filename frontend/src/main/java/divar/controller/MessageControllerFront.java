@@ -1,8 +1,10 @@
 package divar.controller;
 
+import divar.config.SceneManager;
 import divar.dto.request.CreateMessageRequest;
 import divar.dto.response.MessageResponse;
 import divar.service.MessageService;
+import divar.util.Constants;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -128,7 +130,10 @@ public class MessageControllerFront {
         }
 
     }
-
+    @FXML
+    private void back() {
+        SceneManager.switchScene(Constants.CONVERSATIONS);
+    }
     @FXML
     private void refresh() {
 

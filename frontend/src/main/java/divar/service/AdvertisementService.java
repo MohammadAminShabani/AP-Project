@@ -13,7 +13,7 @@ import java.util.List;
 
 public class AdvertisementService {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     public List<AdvertisementResponse> getAll()
             throws IOException, InterruptedException, ApiException {

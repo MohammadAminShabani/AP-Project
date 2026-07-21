@@ -14,7 +14,7 @@ import java.util.List;
 public class MessageService {
 
     private static final ObjectMapper mapper =
-            new ObjectMapper();
+            new ObjectMapper().findAndRegisterModules();
 
     public List<MessageResponse> getMessages(Long conversationId)
             throws IOException, InterruptedException, ApiException {

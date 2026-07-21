@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class AuthService {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     /**
      * Calls POST /users/login.

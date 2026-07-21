@@ -30,7 +30,26 @@
                     onAction="#refresh"/>
 
         </HBox>
+        <HBox alignment="CENTER_LEFT" styleClass="detail-header">
 
+            <padding>
+                <Insets top="15" right="20" left="20" bottom="15"/>
+            </padding>
+
+            <Button text="← بازگشت"
+                    onAction="#back"
+                    styleClass="ghost-button"/>
+
+            <Label fx:id="lblUser"
+                   styleClass="detail-title"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <Button text="⟳"
+                    onAction="#refresh"
+                    styleClass="ghost-button"/>
+
+        </HBox>
     </top>
 
     <center>
