@@ -45,6 +45,18 @@
                                     onAction="#openConversation"
                                     styleClass="primary-button"
                                     maxWidth="Infinity"/>
+                            <Button
+                                    fx:id="favoriteButton"
+                                    text="☆ افزودن به علاقه‌مندی‌ها"
+                                    onAction="#toggleFavorite"
+                                    styleClass="ghost-button"
+                                    maxWidth="Infinity"/>
+                            <Button
+                                    fx:id="rateButton"
+                                    text="⭐ امتیازدهی به فروشنده"
+                                    onAction="#openRating"
+                                    styleClass="ghost-button"
+                                    maxWidth="Infinity"/>
                         </VBox>
                     </HBox>
                     <HBox fx:id="ownerActionsBox" spacing="10" alignment="CENTER_RIGHT" managed="false" visible="false" styleClass="actions-bar">

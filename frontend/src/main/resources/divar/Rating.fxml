@@ -4,30 +4,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15"
-      alignment="CENTER"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="divar.controller.RatingController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.RatingController" prefWidth="560" prefHeight="560"
+            stylesheets="@../css/style.css">
 
-    <padding>
-        <Insets top="20"
-                right="20"
-                left="20"
-                bottom="20"/>
-    </padding>
+    <top>
+        <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
+            <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
+            <Button text="بازگشت" onAction="#back" styleClass="ghost-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="امتیازدهی به فروشنده" styleClass="brand-mark"/>
+        </HBox>
+    </top>
 
-    <Label text="Rate Seller"
-           style="-fx-font-size:20px;
-                  -fx-font-weight:bold;"/>
+    <center>
+        <VBox alignment="TOP_RIGHT" spacing="16" styleClass="form-card">
+            <padding><Insets top="30" right="40" bottom="36" left="40"/></padding>
 
-    <TextField fx:id="scoreField"
-               promptText="Score (1-5)"/>
+            <Label fx:id="adTitleLabel" styleClass="form-title" wrapText="true"/>
+            <Label fx:id="sellerNameLabel" styleClass="hero-subtitle"/>
 
-    <TextArea fx:id="commentField"
-              prefHeight="120"
-              promptText="Comment"/>
+            <Separator/>
 
-    <Button text="Submit"
-            onAction="#submitRating"/>
+            <Label text="امتیاز (۱ تا ۵)" styleClass="field-label"/>
+            <Spinner fx:id="scoreSpinner" styleClass="form-input" maxWidth="140"/>
 
-</VBox>
+            <Label text="نظر (اختیاری)" styleClass="field-label"/>
+            <TextArea fx:id="commentField" prefHeight="140" wrapText="true"
+                      promptText="تجربه‌ات از خرید را بنویس..." styleClass="form-input"/>
+
+            <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
+
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button text="ثبت امتیاز" onAction="#submitRating" styleClass="primary-button"/>
+                <Button text="انصراف" onAction="#back" styleClass="ghost-button"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

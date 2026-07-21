@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="divar.controller.FavoriteController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.FavoriteControllerFront" prefWidth="900" prefHeight="680"
+            stylesheets="@../css/style.css">
 
     <top>
-
-        <Label text="My Favorites"
-               style="-fx-font-size:20px;
-                      -fx-padding:15;"/>
-
+        <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
+            <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
+            <Button text="بازگشت به خانه" onAction="#back" styleClass="ghost-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="علاقه‌مندی‌های من" styleClass="brand-mark"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="⟳ تازه‌سازی" onAction="#refresh" styleClass="ghost-button"/>
+        </HBox>
     </top>
 
     <center>
-
-        <ListView fx:id="favoriteList"/>
-
+        <VBox spacing="12" styleClass="content-shell">
+            <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+            <Label text="روی هر آگهی دوبار کلیک کن تا جزئیاتش را ببینی." styleClass="hero-subtitle"/>
+            <ListView fx:id="favoriteList" styleClass="ads-list" VBox.vgrow="ALWAYS"/>
+        </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="actions-bar">
+            <padding><Insets top="14" right="28" left="28" bottom="18"/></padding>
+            <Button text="حذف از علاقه‌مندی‌ها" onAction="#removeSelected" styleClass="danger-button"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>
