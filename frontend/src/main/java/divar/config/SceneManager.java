@@ -1,42 +1,42 @@
-package divar.config;
+    package divar.config;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+    import javafx.fxml.FXMLLoader;
+    import javafx.scene.Parent;
+    import javafx.scene.Scene;
+    import javafx.stage.Stage;
 
-import java.io.IOException;
+    import java.io.IOException;
 
-public class SceneManager {
+    public class SceneManager {
 
-    private static Stage primaryStage;
+        private static Stage primaryStage;
 
-    private SceneManager() {}
+        private SceneManager() {}
 
-    public static void setStage(Stage stage) {
-        primaryStage = stage;
-    }
+        public static void setStage(Stage stage) {
+            primaryStage = stage;
+        }
 
-    public static void loadScene(String fxml, String title) {
+        public static void loadScene(String fxml, String title) {
 
-        try {
+            try {
 
-            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/divar/" + fxml));
+                FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/divar/" + fxml));
 
-            Parent root = loader.load();
+                Parent root = loader.load();
 
-            Scene scene = new Scene(root);
+                Scene scene = new Scene(root);
 
-            primaryStage.setTitle(title);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+                primaryStage.setTitle(title);
+                primaryStage.setScene(scene);
+                primaryStage.show();
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void switchScene(String fxml) {
+            loadScene(fxml, primaryStage.getTitle());
         }
     }
-
-    public static void switchScene(String fxml) {
-        loadScene(fxml, primaryStage.getTitle());
-    }
-}
