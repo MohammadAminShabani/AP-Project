@@ -104,4 +104,20 @@ public class AdvertisementController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        advertisementService.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/sold")
+    public AdvertisementResponse markAsSold(@PathVariable Long id) {
+
+        return advertisementService.markAsSold(id);
+    }
+
+
 }
