@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15"
+      alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="divar.controller.RatingController">
+
+    <padding>
+        <Insets top="20"
+                right="20"
+                left="20"
+                bottom="20"/>
+    </padding>
+
+    <Label text="Rate Seller"
+           style="-fx-font-size:20px;
+                  -fx-font-weight:bold;"/>
+
+    <TextField fx:id="scoreField"
+               promptText="Score (1-5)"/>
+
+    <TextArea fx:id="commentField"
+              prefHeight="120"
+              promptText="Comment"/>
+
+    <Button text="Submit"
+            onAction="#submitRating"/>
+
+</VBox>
