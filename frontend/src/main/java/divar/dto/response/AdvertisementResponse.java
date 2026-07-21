@@ -15,6 +15,7 @@ public class AdvertisementResponse {
     private String status;
 
     private String ownerName;
+    private Long ownerId;
     private Double averageRate;
 
     private List<String> imageUrls;
@@ -86,6 +87,14 @@ public class AdvertisementResponse {
         this.ownerName = ownerName;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public Double getAverageRate() {
         return averageRate;
     }
@@ -100,5 +109,12 @@ public class AdvertisementResponse {
 
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
+    }
+
+    @Override
+    public String toString() {
+
+        return title + " | " + price + " تومان";
+
     }
 }
