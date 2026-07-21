@@ -42,4 +42,6 @@ public interface AdvertisementService {
     void deleteImage(Long imageId);
 
     void delete(Long id);
+
+    AdvertisementResponse markAsSold(Long id);
 }
