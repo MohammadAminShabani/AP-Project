@@ -51,6 +51,7 @@ public class AdminServiceImpl implements AdminService {
                         ad.getCategory().getName(),
                         ad.getStatus(),
                         ad.getOwner().getFullName(),
+                        ad.getOwner().getId(),
                         ad.getOwner().getAverageRating(),
                         ad.getImages()
                                 .stream()
