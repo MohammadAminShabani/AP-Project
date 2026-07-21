@@ -1,17 +1,14 @@
 package divar.session;
 
-public class SessionManager {
+public final class SessionManager {
 
     private static String token;
-
     private static Long userId;
-
     private static String username;
-
     private static String role;
 
-
     private SessionManager() {
+        // Prevent object creation
     }
 
     public static void setToken(String jwt) {
@@ -38,16 +35,25 @@ public class SessionManager {
         return username;
     }
 
-    public static void setRole(String role){
-        SessionManager.role = role;
+    public static void setRole(String userRole) {
+        role = userRole;
     }
 
-    public static String getRole(){
+    public static String getRole() {
         return role;
     }
 
     public static boolean isLoggedIn() {
         return token != null && !token.isBlank();
+    }
+
+    public static boolean isAdmin() {
+        return role != null &&
+                role.equalsIgnoreCase("ADMIN");
+    }
+
+    public static void logout() {
+        clear();
     }
 
     public static void clear() {

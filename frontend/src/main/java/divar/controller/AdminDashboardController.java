@@ -5,14 +5,17 @@ import divar.dto.response.AdvertisementResponse;
 import divar.dto.response.UserResponse;
 import divar.network.ApiException;
 import divar.service.AdminService;
+import divar.session.SessionManager;
 import divar.util.Constants;
-import divar.util.SessionManager;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
@@ -31,154 +34,169 @@ public class AdminDashboardController {
     @FXML
     public void initialize() {
 
-        adminLabel.setText(
-                "خوش آمدید " + SessionManager.getUsername()
-        );
+        String username = SessionManager.getUsername();
+
+        if (username == null || username.isBlank()) {
+            username = "مدیر";
+        }
+
+        adminLabel.setText("خوش آمدید " + username);
 
         showUsers();
     }
+
+    // =========================================================
+    // USERS
+    // =========================================================
 
     @FXML
     public void showUsers() {
 
         TableView<UserResponse> table = new TableView<>();
 
+        table.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+        table.setPlaceholder(
+                new Label("کاربری برای نمایش وجود ندارد")
+        );
+
         TableColumn<UserResponse, String> idCol =
-                new TableColumn<>("ID");
+                new TableColumn<>("شناسه");
 
         idCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
                         String.valueOf(data.getValue().getId())
-                ));
-
-        idCol.setPrefWidth(70);
+                )
+        );
 
         TableColumn<UserResponse, String> usernameCol =
-                new TableColumn<>("Username");
+                new TableColumn<>("نام کاربری");
 
         usernameCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getUsername()
-                ));
-
-        usernameCol.setPrefWidth(180);
+                        safe(data.getValue().getUsername())
+                )
+        );
 
         TableColumn<UserResponse, String> roleCol =
-                new TableColumn<>("Role");
+                new TableColumn<>("نقش");
 
         roleCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getRole()
-                ));
-
-        roleCol.setPrefWidth(120);
+                        safe(data.getValue().getRole())
+                )
+        );
 
         TableColumn<UserResponse, String> statusCol =
-                new TableColumn<>("Status");
+                new TableColumn<>("وضعیت");
 
         statusCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getStatus()
-                ));
-
-        statusCol.setPrefWidth(120);
+                        safe(data.getValue().getStatus())
+                )
+        );
 
         TableColumn<UserResponse, Void> actionCol =
-                new TableColumn<>("Operation");
+                new TableColumn<>("عملیات");
 
-        actionCol.setPrefWidth(180);
+        actionCol.setCellFactory(column ->
+                new TableCell<>() {
 
-        actionCol.setCellFactory(column -> new TableCell<>() {
+                    private final Button actionButton =
+                            new Button();
 
-            private final Button actionButton =
-                    new Button();
+                    {
+                        actionButton.setOnAction(event -> {
 
-            {
+                            UserResponse user =
+                                    getTableView()
+                                            .getItems()
+                                            .get(getIndex());
 
-                actionButton.setOnAction(event -> {
+                            if (user == null) {
+                                return;
+                            }
 
-                    UserResponse user =
-                            getTableView()
-                                    .getItems()
-                                    .get(getIndex());
+                            try {
 
-                    try {
+                                if (isActive(user)) {
 
-                        if ("ACTIVE".equalsIgnoreCase(
-                                user.getStatus())) {
+                                    adminService.blockUser(
+                                            user.getId()
+                                    );
 
-                            adminService.blockUser(
-                                    user.getId());
+                                } else {
+
+                                    adminService.unblockUser(
+                                            user.getId()
+                                    );
+                                }
+
+                                showUsers();
+
+                            } catch (ApiException e) {
+
+                                showError(
+                                        "خطا",
+                                        e.getMessage()
+                                );
+
+                            } catch (
+                                    IOException |
+                                    InterruptedException e
+                            ) {
+
+                                showServerError();
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected void updateItem(
+                            Void item,
+                            boolean empty
+                    ) {
+
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+
+                            setGraphic(null);
+
+                            return;
+                        }
+
+                        UserResponse user =
+                                getTableView()
+                                        .getItems()
+                                        .get(getIndex());
+
+                        if (user == null) {
+
+                            setGraphic(null);
+
+                            return;
+                        }
+
+                        if (isActive(user)) {
+
+                            actionButton.setText(
+                                    "مسدود کردن"
+                            );
 
                         } else {
 
-                            adminService.unblockUser(
-                                    user.getId());
-
+                            actionButton.setText(
+                                    "فعال‌سازی"
+                            );
                         }
 
-                        showUsers();
-
-                    } catch (ApiException e) {
-
-                        Alert alert =
-                                new Alert(Alert.AlertType.ERROR);
-
-                        alert.setContentText(
-                                e.getMessage());
-
-                        alert.show();
-
-                    } catch (IOException |
-                             InterruptedException e) {
-
-                        Alert alert =
-                                new Alert(Alert.AlertType.ERROR);
-
-                        alert.setContentText(
-                                "خطا در ارتباط با سرور");
-
-                        alert.show();
+                        setGraphic(actionButton);
                     }
-
-                });
-
-            }
-
-            @Override
-            protected void updateItem(
-                    Void item,
-                    boolean empty) {
-
-                super.updateItem(item, empty);
-
-                if (empty) {
-
-                    setGraphic(null);
-                    return;
                 }
-
-                UserResponse user =
-                        getTableView()
-                                .getItems()
-                                .get(getIndex());
-
-                if ("ACTIVE".equalsIgnoreCase(
-                        user.getStatus())) {
-
-                    actionButton.setText("Block");
-
-                } else {
-
-                    actionButton.setText("Unblock");
-
-                }
-
-                setGraphic(actionButton);
-
-            }
-
-        });
+        );
 
         table.getColumns().addAll(
                 idCol,
@@ -201,138 +219,168 @@ public class AdminDashboardController {
 
         } catch (ApiException e) {
 
-            Alert alert =
-                    new Alert(Alert.AlertType.ERROR);
+            showError(
+                    "خطا در دریافت کاربران",
+                    e.getMessage()
+            );
 
-            alert.setContentText(
-                    e.getMessage());
+        } catch (
+                IOException |
+                InterruptedException e
+        ) {
 
-            alert.show();
-
-        } catch (IOException |
-                 InterruptedException e) {
-
-            Alert alert =
-                    new Alert(Alert.AlertType.ERROR);
-
-            alert.setContentText(
-                    "خطا در ارتباط با سرور");
-
-            alert.show();
-
+            showServerError();
         }
 
         BorderPane pane =
-                new BorderPane();
+                createBasePane(
+                        "مدیریت کاربران"
+                );
 
-        Label title =
-                new Label("مدیریت کاربران");
-
-        title.setStyle(
-                "-fx-font-size:18px;" +
-                        "-fx-font-weight:bold;"
-        );
-
-        BorderPane.setMargin(
-                title,
-                new Insets(15)
-        );
-
-        pane.setTop(title);
         pane.setCenter(table);
 
         contentPane.getChildren().setAll(
                 pane
         );
     }
+
+    // =========================================================
+    // BLOCKED USERS
+    // =========================================================
+
     @FXML
     public void showBlockedUsers() {
 
-        TableView<UserResponse> table = new TableView<>();
+        TableView<UserResponse> table =
+                new TableView<>();
+
+        table.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+        table.setPlaceholder(
+                new Label(
+                        "کاربر مسدودشده‌ای وجود ندارد"
+                )
+        );
 
         TableColumn<UserResponse, String> idCol =
-                new TableColumn<>("ID");
+                new TableColumn<>("شناسه");
 
         idCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        String.valueOf(data.getValue().getId())
-                ));
+                        String.valueOf(
+                                data.getValue().getId()
+                        )
+                )
+        );
 
         TableColumn<UserResponse, String> usernameCol =
-                new TableColumn<>("Username");
+                new TableColumn<>("نام کاربری");
 
         usernameCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getUsername()
-                ));
+                        safe(
+                                data.getValue()
+                                        .getUsername()
+                        )
+                )
+        );
 
         TableColumn<UserResponse, String> roleCol =
-                new TableColumn<>("Role");
+                new TableColumn<>("نقش");
 
         roleCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getRole()
-                ));
+                        safe(
+                                data.getValue()
+                                        .getRole()
+                        )
+                )
+        );
+
+        TableColumn<UserResponse, String> statusCol =
+                new TableColumn<>("وضعیت");
+
+        statusCol.setCellValueFactory(data ->
+                new SimpleStringProperty(
+                        safe(
+                                data.getValue()
+                                        .getStatus()
+                        )
+                )
+        );
 
         TableColumn<UserResponse, Void> actionCol =
-                new TableColumn<>("Operation");
+                new TableColumn<>("عملیات");
 
-        actionCol.setCellFactory(column -> new TableCell<>() {
+        actionCol.setCellFactory(column ->
+                new TableCell<>() {
 
-            private final Button button =
-                    new Button("Unblock");
+                    private final Button button =
+                            new Button(
+                                    "فعال‌سازی"
+                            );
 
-            {
+                    {
+                        button.setOnAction(event -> {
 
-                button.setOnAction(event -> {
+                            UserResponse user =
+                                    getTableView()
+                                            .getItems()
+                                            .get(getIndex());
 
-                    UserResponse user =
-                            getTableView().getItems().get(getIndex());
+                            if (user == null) {
+                                return;
+                            }
 
-                    try {
+                            try {
 
-                        adminService.unblockUser(user.getId());
+                                adminService.unblockUser(
+                                        user.getId()
+                                );
 
-                        showBlockedUsers();
+                                showBlockedUsers();
 
-                    } catch (Exception e) {
+                            } catch (ApiException e) {
 
-                        Alert alert =
-                                new Alert(Alert.AlertType.ERROR);
+                                showError(
+                                        "خطا",
+                                        e.getMessage()
+                                );
 
-                        alert.setContentText(e.getMessage());
+                            } catch (
+                                    IOException |
+                                    InterruptedException e
+                            ) {
 
-                        alert.show();
+                                showServerError();
+                            }
+                        });
                     }
 
-                });
+                    @Override
+                    protected void updateItem(
+                            Void item,
+                            boolean empty
+                    ) {
 
-            }
+                        super.updateItem(item, empty);
 
-            @Override
-            protected void updateItem(Void item,
-                                      boolean empty) {
-
-                super.updateItem(item, empty);
-
-                if (empty) {
-
-                    setGraphic(null);
-
-                } else {
-
-                    setGraphic(button);
-
+                        setGraphic(
+                                empty
+                                        ? null
+                                        : button
+                        );
+                    }
                 }
-
-            }
-
-        });
+        );
 
         table.getColumns().addAll(
                 idCol,
                 usernameCol,
                 roleCol,
+                statusCol,
                 actionCol
         );
 
@@ -341,222 +389,250 @@ public class AdminDashboardController {
             List<UserResponse> users =
                     adminService.getAllUsers();
 
+            List<UserResponse> blockedUsers =
+                    users.stream()
+                            .filter(user ->
+                                    "BLOCKED".equalsIgnoreCase(
+                                            user.getStatus()
+                                    )
+                            )
+                            .toList();
+
             table.setItems(
                     FXCollections.observableArrayList(
-
-                            users.stream()
-
-                                    .filter(user ->
-                                            "BLOCKED".equalsIgnoreCase(
-                                                    user.getStatus()
-                                            ))
-
-                                    .toList()
-
+                            blockedUsers
                     )
             );
 
-        } catch (Exception e) {
+        } catch (ApiException e) {
 
-            Alert alert =
-                    new Alert(Alert.AlertType.ERROR);
+            showError(
+                    "خطا در دریافت کاربران",
+                    e.getMessage()
+            );
 
-            alert.setContentText(e.getMessage());
+        } catch (
+                IOException |
+                InterruptedException e
+        ) {
 
-            alert.show();
-
+            showServerError();
         }
 
         BorderPane pane =
-                new BorderPane();
+                createBasePane(
+                        "کاربران مسدودشده"
+                );
 
-        Label title =
-                new Label("کاربران بلاک شده");
-
-        title.setStyle(
-                "-fx-font-size:18px;-fx-font-weight:bold;"
-        );
-
-        BorderPane.setMargin(
-                title,
-                new Insets(15)
-        );
-
-        pane.setTop(title);
         pane.setCenter(table);
 
-        contentPane.getChildren().setAll(pane);
-    }
-
-    @FXML
-    public void logout() {
-
-        SessionManager.logout();
-
-        SceneManager.loadScene(
-                Constants.LOGIN,
-                "ورود"
+        contentPane.getChildren().setAll(
+                pane
         );
     }
+
+    // =========================================================
+    // ADVERTISEMENTS
+    // =========================================================
+
     @FXML
     public void showAdvertisements() {
 
-        TableView<AdvertisementResponse> table = new TableView<>();
+        TableView<AdvertisementResponse> table =
+                new TableView<>();
+
+        table.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+        table.setPlaceholder(
+                new Label(
+                        "آگهی‌ای برای نمایش وجود ندارد"
+                )
+        );
 
         TableColumn<AdvertisementResponse, String> idCol =
-                new TableColumn<>("ID");
+                new TableColumn<>("شناسه");
 
         idCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        String.valueOf(data.getValue().getId())
-                ));
-
-        idCol.setPrefWidth(70);
+                        String.valueOf(
+                                data.getValue().getId()
+                        )
+                )
+        );
 
         TableColumn<AdvertisementResponse, String> titleCol =
                 new TableColumn<>("عنوان");
 
         titleCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getTitle()
-                ));
-
-        titleCol.setPrefWidth(180);
+                        safe(
+                                data.getValue()
+                                        .getTitle()
+                        )
+                )
+        );
 
         TableColumn<AdvertisementResponse, String> ownerCol =
                 new TableColumn<>("مالک");
 
         ownerCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getOwnerName()
-                ));
-
-        ownerCol.setPrefWidth(150);
+                        safe(
+                                data.getValue()
+                                        .getOwnerName()
+                        )
+                )
+        );
 
         TableColumn<AdvertisementResponse, String> cityCol =
                 new TableColumn<>("شهر");
 
         cityCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getCity()
-                ));
-
-        cityCol.setPrefWidth(120);
+                        safe(
+                                data.getValue()
+                                        .getCity()
+                        )
+                )
+        );
 
         TableColumn<AdvertisementResponse, String> categoryCol =
-                new TableColumn<>("دسته");
+                new TableColumn<>("دسته‌بندی");
 
         categoryCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getCategory()
-                ));
-
-        categoryCol.setPrefWidth(120);
+                        safe(
+                                data.getValue()
+                                        .getCategory()
+                        )
+                )
+        );
 
         TableColumn<AdvertisementResponse, String> statusCol =
                 new TableColumn<>("وضعیت");
 
         statusCol.setCellValueFactory(data ->
                 new SimpleStringProperty(
-                        data.getValue().getStatus()
-                ));
-
-        statusCol.setPrefWidth(120);
+                        safe(
+                                data.getValue()
+                                        .getStatus()
+                        )
+                )
+        );
 
         TableColumn<AdvertisementResponse, Void> actionCol =
                 new TableColumn<>("عملیات");
 
-        actionCol.setPrefWidth(180);
+        actionCol.setCellFactory(column ->
+                new TableCell<>() {
 
-        actionCol.setCellFactory(column -> new TableCell<>() {
+                    private final ComboBox<String> combo =
+                            new ComboBox<>();
 
-            private final ComboBox<String> combo =
-                    new ComboBox<>();
+                    {
+                        combo.getItems().addAll(
+                                "تأیید آگهی",
+                                "رد آگهی",
+                                "حذف آگهی"
+                        );
 
-            {
+                        combo.setPromptText(
+                                "انتخاب عملیات"
+                        );
 
-                combo.getItems().addAll(
-                        "Approve",
-                        "Reject",
-                        "Delete"
-                );
+                        combo.setOnAction(event -> {
 
-                combo.setPromptText("انتخاب");
+                            AdvertisementResponse ad =
+                                    getTableView()
+                                            .getItems()
+                                            .get(getIndex());
 
-                combo.setOnAction(event -> {
+                            if (ad == null) {
+                                return;
+                            }
 
-                    AdvertisementResponse ad =
-                            getTableView().getItems().get(getIndex());
+                            String selected =
+                                    combo.getValue();
 
-                    String action =
-                            combo.getValue();
+                            if (selected == null) {
+                                return;
+                            }
 
-                    if(action == null)
-                        return;
+                            try {
 
-                    try {
+                                switch (selected) {
 
-                        switch (action){
+                                    case "تأیید آگهی" ->
 
-                            case "Approve" ->
-                                    adminService.approveAdvertisement(ad.getId());
+                                            adminService
+                                                    .approveAdvertisement(
+                                                            ad.getId()
+                                                    );
 
-                            case "Reject" ->
-                                    adminService.rejectAdvertisement(ad.getId());
+                                    case "رد آگهی" ->
 
-                            case "Delete" ->
-                                    adminService.deleteAdvertisement(ad.getId());
+                                            adminService
+                                                    .rejectAdvertisement(
+                                                            ad.getId()
+                                                    );
 
-                        }
+                                    case "حذف آگهی" -> {
 
-                        showAdvertisements();
+                                        if (
+                                                confirmDelete()
+                                        ) {
 
-                    } catch (ApiException e){
+                                            adminService
+                                                    .deleteAdvertisement(
+                                                            ad.getId()
+                                                    );
+                                        }
+                                    }
+                                }
 
-                        Alert alert =
-                                new Alert(Alert.AlertType.ERROR);
+                                showAdvertisements();
 
-                        alert.setHeaderText(null);
-                        alert.setContentText(e.getMessage());
+                            } catch (ApiException e) {
 
-                        alert.show();
+                                showError(
+                                        "خطا در مدیریت آگهی",
+                                        e.getMessage()
+                                );
 
-                    } catch (IOException | InterruptedException e){
+                            } catch (
+                                    IOException |
+                                    InterruptedException e
+                            ) {
 
-                        Alert alert =
-                                new Alert(Alert.AlertType.ERROR);
-
-                        alert.setHeaderText(null);
-                        alert.setContentText("خطا در ارتباط با سرور");
-
-                        alert.show();
+                                showServerError();
+                            }
+                        });
                     }
 
-                });
+                    @Override
+                    protected void updateItem(
+                            Void item,
+                            boolean empty
+                    ) {
 
-            }
+                        super.updateItem(item, empty);
 
-            @Override
-            protected void updateItem(Void item,
-                                      boolean empty) {
+                        if (empty) {
 
-                super.updateItem(item, empty);
+                            setGraphic(null);
 
-                if(empty){
+                            return;
+                        }
 
-                    setGraphic(null);
+                        combo.getSelectionModel()
+                                .clearSelection();
 
-                }else{
-
-                    combo.getSelectionModel().clearSelection();
-
-                    setGraphic(combo);
-
+                        setGraphic(combo);
+                    }
                 }
-
-            }
-
-        });
+        );
 
         table.getColumns().addAll(
                 idCol,
@@ -571,7 +647,8 @@ public class AdminDashboardController {
         try {
 
             List<AdvertisementResponse> advertisements =
-                    adminService.getAllAdvertisements();
+                    adminService
+                            .getAllAdvertisements();
 
             table.setItems(
                     FXCollections.observableArrayList(
@@ -579,37 +656,146 @@ public class AdminDashboardController {
                     )
             );
 
-        } catch (ApiException e){
+        } catch (ApiException e) {
 
-            Alert alert =
-                    new Alert(Alert.AlertType.ERROR);
+            showError(
+                    "خطا در دریافت آگهی‌ها",
+                    e.getMessage()
+            );
 
-            alert.setHeaderText(null);
-            alert.setContentText(e.getMessage());
+        } catch (
+                IOException |
+                InterruptedException e
+        ) {
 
-            alert.show();
-
-        } catch (IOException | InterruptedException e){
-
-            Alert alert =
-                    new Alert(Alert.AlertType.ERROR);
-
-            alert.setHeaderText(null);
-            alert.setContentText("خطا در ارتباط با سرور");
-
-            alert.show();
+            showServerError();
         }
 
-        BorderPane pane = new BorderPane();
+        BorderPane pane =
+                createBasePane(
+                        "مدیریت آگهی‌ها"
+                );
 
-        Label title = new Label("مدیریت آگهی‌ها");
-
-        title.setStyle("-fx-font-size:18px;" + "-fx-font-weight:bold;");
-
-        BorderPane.setMargin(title, new Insets(15));
-
-        pane.setTop(title);
         pane.setCenter(table);
 
-        contentPane.getChildren().setAll(pane);
-    }}
+        contentPane.getChildren().setAll(
+                pane
+        );
+    }
+
+    // =========================================================
+    // LOGOUT
+    // =========================================================
+
+    @FXML
+    public void logout() {
+
+        SessionManager.logout();
+
+        SceneManager.loadScene(
+                Constants.LOGIN,
+                "ورود"
+        );
+    }
+
+    // =========================================================
+    // HELPERS
+    // =========================================================
+
+    private BorderPane createBasePane(
+            String titleText
+    ) {
+
+        BorderPane pane =
+                new BorderPane();
+
+        Label title =
+                new Label(titleText);
+
+        title.setStyle(
+                "-fx-font-size: 20px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        BorderPane.setMargin(
+                title,
+                new Insets(15)
+        );
+
+        pane.setTop(title);
+
+        return pane;
+    }
+
+    private boolean isActive(
+            UserResponse user
+    ) {
+
+        return user.getStatus() != null &&
+                user.getStatus()
+                        .equalsIgnoreCase(
+                                "ACTIVE"
+                        );
+    }
+
+    private String safe(
+            String value
+    ) {
+
+        return value == null
+                ? "-"
+                : value;
+    }
+
+    private void showError(
+            String header,
+            String message
+    ) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.ERROR
+                );
+
+        alert.setTitle("خطا");
+        alert.setHeaderText(header);
+        alert.setContentText(
+                message == null
+                        ? "خطای نامشخص"
+                        : message
+        );
+
+        alert.showAndWait();
+    }
+
+    private void showServerError() {
+
+        showError(
+                "خطا در ارتباط با سرور",
+                "ارتباط با Backend برقرار نشد."
+        );
+    }
+
+    private boolean confirmDelete() {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.CONFIRMATION
+                );
+
+        alert.setTitle("تأیید حذف");
+        alert.setHeaderText(
+                "حذف آگهی"
+        );
+
+        alert.setContentText(
+                "آیا از حذف این آگهی مطمئن هستید؟"
+        );
+
+        return alert.showAndWait()
+                .filter(
+                        ButtonType.OK::equals
+                )
+                .isPresent();
+    }
+}
