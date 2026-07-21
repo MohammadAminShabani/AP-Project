@@ -80,6 +80,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
             response.setOwnerName(advertisement.getOwner().getFullName());
 
+            response.setOwnerId(advertisement.getOwner().getId());
+
             response.setAverageRate(advertisement.getOwner().getAverageRating());
         }
 
@@ -126,8 +128,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public List<AdvertisementResponse> findAll() {
-
-        return advertisementRepository.findAll()
+        return advertisementRepository.findByStatus(AdStatus.ACTIVE)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -222,7 +223,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         return advertisementRepository
-                .findByCategory(category)
+                .findByCategoryAndStatus(category, AdStatus.ACTIVE)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -235,7 +236,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                         new ResourceNotFoundException("City not found"));
 
         return advertisementRepository
-                .findByCity(city)
+                .findByCityAndStatus(city, AdStatus.ACTIVE)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -304,7 +305,41 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         checkOwner(advertisement);
 
-        advertisementRepository.delete(advertisement);
+        if (advertisement.getStatus() == AdStatus.DELETED) {
+            throw new BadRequestException("Advertisement is already deleted.");
+        }
+
+        // حذف منطقی: به جای حذف واقعی رکورد از پایگاه داده (که به‌خاطر
+        // ارجاع پیام‌ها، علاقه‌مندی‌ها و امتیازها به این آگهی می‌تواند
+        // باعث خطای کلید خارجی شود)، فقط وضعیت آن به DELETED تغییر می‌کند.
+        // این آگهی دیگر در هیچ لیست عمومی یا جست‌وجویی نمایش داده نمی‌شود.
+        advertisement.changeStatus(AdStatus.DELETED);
+
+        advertisementRepository.save(advertisement);
+    }
+
+    @Override
+    @Transactional
+    public AdvertisementResponse markAsSold(Long id) {
+
+        Advertisement advertisement = getAdvertisement(id);
+
+        checkOwner(advertisement);
+
+        if (advertisement.getStatus() == AdStatus.SOLD) {
+            throw new BadRequestException("Advertisement is already marked as sold.");
+        }
+
+        if (advertisement.getStatus() != AdStatus.ACTIVE) {
+            throw new BadRequestException(
+                    "Only an active advertisement can be marked as sold.");
+        }
+
+        advertisement.changeStatus(AdStatus.SOLD);
+
+        Advertisement updated = advertisementRepository.save(advertisement);
+
+        return mapToResponse(updated);
     }
 
     private Advertisement getAdvertisement(Long id) {
