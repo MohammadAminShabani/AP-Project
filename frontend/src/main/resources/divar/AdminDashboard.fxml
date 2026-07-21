@@ -1,14 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.AdminController"
+            prefWidth="1000.0" prefHeight="650.0">
 
-</AnchorPane>
+    <top>
+        <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="toolbar">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+
+            <Label text="پنل مدیریت" styleClass="title"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label fx:id="messageLabel" style="-fx-text-fill:#c0392b;"/>
+
+            <Button text="بازگشت" onAction="#back"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+
+            <Tab text="آگهی‌های در انتظار بررسی">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+
+                    <ListView fx:id="pendingAdsListView" VBox.vgrow="ALWAYS"/>
+
+                    <HBox spacing="10">
+                        <Button text="تایید آگهی" onAction="#approveSelectedAd"/>
+                        <Button text="رد آگهی" onAction="#rejectSelectedAd"/>
+                        <Button text="حذف آگهی" onAction="#deleteSelectedAd"/>
+                        <Button text="بروزرسانی" onAction="#refreshAds"/>
+                    </HBox>
+                </VBox>
+            </Tab>
+
+            <Tab text="کاربران">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+
+                    <ListView fx:id="usersListView" VBox.vgrow="ALWAYS"/>
+
+                    <HBox spacing="10">
+                        <Button text="مسدود کردن کاربر" onAction="#blockSelectedUser"/>
+                        <Button text="رفع مسدودی کاربر" onAction="#unblockSelectedUser"/>
+                        <Button text="بروزرسانی" onAction="#refreshUsers"/>
+                    </HBox>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>
