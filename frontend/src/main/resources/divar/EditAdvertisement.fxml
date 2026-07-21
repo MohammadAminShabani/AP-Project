@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.EditAdvertisementController" prefWidth="1000" prefHeight="720"
+            stylesheets="@../css/style.css">
+    <top>
+        <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
+            <padding><Insets top="18" right="30" bottom="18" left="30"/></padding>
+            <Label text="ویرایش آگهی" styleClass="brand-mark"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="بازگشت" styleClass="ghost-button" onAction="#back"/>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="detail-scroll">
+            <content>
+                <VBox alignment="TOP_RIGHT" spacing="18" styleClass="form-card">
+                    <padding><Insets top="30" right="44" bottom="36" left="44"/></padding>
+                    <Label text="اطلاعات آگهی را به‌روز کن" styleClass="form-title"/>
+                    <Label text="تغییراتت بعد از ذخیره روی آگهی اعمال می‌شود." styleClass="hero-subtitle"/>
+                    <GridPane hgap="18" vgap="8" alignment="TOP_RIGHT">
+                        <columnConstraints><ColumnConstraints hgrow="ALWAYS"/><ColumnConstraints hgrow="ALWAYS"/></columnConstraints>
+                        <Label text="عنوان آگهی" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="قیمت (تومان)" styleClass="field-label" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <TextField fx:id="titleField" styleClass="form-input" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="priceField" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="شهر" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label text="دسته‌بندی" styleClass="field-label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="cityComboBox" maxWidth="Infinity" styleClass="form-input" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="categoryComboBox" maxWidth="Infinity" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    </GridPane>
+                    <Label text="توضیحات" styleClass="field-label"/>
+                    <TextArea fx:id="descriptionArea" prefHeight="220" wrapText="true" styleClass="form-input"/>
+                    <HBox spacing="12" alignment="CENTER_RIGHT">
+                        <Button text="ذخیره تغییرات" styleClass="primary-button" onAction="#updateAdvertisement"/>
+                        <Button text="انصراف" styleClass="ghost-button" onAction="#back"/>
+                    </HBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>
