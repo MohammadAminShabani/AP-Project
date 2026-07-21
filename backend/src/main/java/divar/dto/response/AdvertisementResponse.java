@@ -22,6 +22,8 @@ public class AdvertisementResponse {
 
     private String ownerName;
 
+    private Long ownerId;
+
     private Double averageRate;
 
     private List<String> imageUrls;
@@ -30,7 +32,7 @@ public class AdvertisementResponse {
 
     }
 
-    public AdvertisementResponse(Long id, String title, String description, Long price, String city, String category, AdStatus status, String ownerName, Double averageRate, List<String> imageUrls) {
+    public AdvertisementResponse(Long id, String title, String description, Long price, String city, String category, AdStatus status, String ownerName, Long ownerId, Double averageRate, List<String> imageUrls) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -39,6 +41,7 @@ public class AdvertisementResponse {
         this.category = category;
         this.status = status;
         this.ownerName = ownerName;
+        this.ownerId = ownerId;
         this.averageRate = averageRate;
         this.imageUrls = imageUrls;
     }
@@ -105,6 +108,14 @@ public class AdvertisementResponse {
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public Double getAverageRate() {
