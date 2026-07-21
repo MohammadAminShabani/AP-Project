@@ -100,30 +100,28 @@ public class ApiClient {
      * Otherwise throws an ApiException with a clean, human-readable
      * message extracted from the backend's error body.
      */
-    private static String unwrap(HttpResponse<String> response) throws ApiException {
+    private static String unwrap(HttpResponse<String> response)
+            throws ApiException {
 
         int status = response.statusCode();
-        String body = response.body();
 
         if (status >= 200 && status < 300) {
-            return body;
+            return response.body() == null ? "" : response.body();
         }
 
-        throw new ApiException(status, extractMessage(body));
+        throw new ApiException(status, extractMessage(response.body()));
     }
 
-    @SuppressWarnings("unchecked")
     private static String extractMessage(String body) {
 
         if (body == null || body.isBlank()) {
-            return "خطایی رخ داد. لطفا دوباره تلاش کنید.";
+            return "خطایی از سمت سرور دریافت نشد.";
         }
 
         try {
             Object parsed = mapper.readValue(body, Object.class);
 
-            if (parsed instanceof Map) {
-                Map<String, Object> map = (Map<String, Object>) parsed;
+            if (parsed instanceof Map<?, ?> map) {
 
                 if (map.containsKey("message")) {
                     return String.valueOf(map.get("message"));
@@ -142,7 +140,6 @@ public class ApiClient {
             return String.valueOf(parsed);
 
         } catch (IOException e) {
-            // body wasn't JSON, treat as plain text message
             return body;
         }
     }
