@@ -5,6 +5,7 @@ import divar.dto.response.AdvertisementResponse;
 import divar.network.ApiException;
 import divar.service.AdvertisementService;
 import divar.service.ConversationService;
+import divar.service.FavoriteService;
 import divar.dto.response.ConversationResponse;
 import divar.session.AdvertisementSession;
 import divar.session.ConversationSession;
@@ -18,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AdvertisementControllerFront {
 
@@ -56,11 +58,21 @@ public class AdvertisementControllerFront {
 
     @FXML
     private Button chatButton;
+
+    @FXML
+    private Button favoriteButton;
+
+    @FXML
+    private Button rateButton;
+
     private final AdvertisementService advertisementService =
             new AdvertisementService();
     private final ConversationService conversationService =
             new ConversationService();
+    private final FavoriteService favoriteService =
+            new FavoriteService();
     private AdvertisementResponse advertisement;
+    private boolean isFavorite = false;
 
     @FXML
     public void initialize() {
@@ -105,10 +117,46 @@ public class AdvertisementControllerFront {
         ownerActionsBox.setManaged(isOwner);
         chatButton.setVisible(!isOwner);
         chatButton.setManaged(!isOwner);
+        favoriteButton.setVisible(!isOwner);
+        favoriteButton.setManaged(!isOwner);
+        rateButton.setVisible(!isOwner);
+        rateButton.setManaged(!isOwner);
         // فقط آگهی فعال قابل تغییر وضعیت به «فروخته شد» است.
         boolean canMarkSold = isOwner && "ACTIVE".equals(advertisement.getStatus());
 
         markSoldButton.setDisable(!canMarkSold);
+
+        if (!isOwner) {
+            loadFavoriteState();
+        }
+    }
+
+    private void loadFavoriteState() {
+
+        try {
+
+            List<AdvertisementResponse> favorites =
+                    favoriteService.getFavorites();
+
+            isFavorite = favorites.stream()
+                    .anyMatch(fav -> fav.getId().equals(advertisement.getId()));
+
+            updateFavoriteButtonText();
+
+        } catch (Exception e) {
+            // اگر دریافت لیست علاقه‌مندی‌ها با خطا مواجه شد،
+            // فرض می‌کنیم آگهی هنوز علاقه‌مند نشده و کاربر می‌تواند دوباره تلاش کند.
+            isFavorite = false;
+            updateFavoriteButtonText();
+        }
+    }
+
+    private void updateFavoriteButtonText() {
+
+        favoriteButton.setText(
+                isFavorite
+                        ? "★ حذف از علاقه‌مندی‌ها"
+                        : "☆ افزودن به علاقه‌مندی‌ها");
     }
 
     private String statusLabelFa(String status) {
@@ -198,6 +246,39 @@ public class AdvertisementControllerFront {
             showMessage("امکان اتصال به سرور وجود ندارد.");
         }
     }
+    @FXML
+    private void toggleFavorite() {
+
+        try {
+
+            if (isFavorite) {
+                favoriteService.remove(advertisement.getId());
+                isFavorite = false;
+            } else {
+                favoriteService.add(advertisement.getId());
+                isFavorite = true;
+            }
+
+            updateFavoriteButtonText();
+            showMessage(null);
+
+        } catch (ApiException e) {
+
+            showMessage(e.getMessage());
+
+        } catch (IOException | InterruptedException e) {
+
+            showMessage("امکان اتصال به سرور وجود ندارد.");
+        }
+    }
+
+    @FXML
+    private void openRating() {
+
+        SceneManager.loadScene(Constants.RATING, "امتیازدهی به فروشنده");
+
+    }
+
     @FXML
     private void openConversation() {
 

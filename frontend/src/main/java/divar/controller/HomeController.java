@@ -74,6 +74,8 @@ public class HomeController {
     private void openAdvertisement(AdvertisementResponse advertisement) { AdvertisementSession.setAdvertisement(advertisement); SceneManager.loadScene(Constants.ADVERTISEMENT, "جزئیات آگهی"); }
     @FXML private void refresh() { loadAdvertisements(); }
     @FXML private void createAdvertisement() { SceneManager.loadScene(Constants.CREATE_AD, "ثبت آگهی"); }
+    @FXML private void openConversations() { SceneManager.loadScene(Constants.CONVERSATIONS, "گفتگوها"); }
+    @FXML private void openFavorites() { SceneManager.loadScene(Constants.FAVORITES, "علاقه‌مندی‌ها"); }
     @FXML private void openAdminPanel() { SceneManager.loadScene(Constants.ADMIN, "پنل مدیریت"); }
     @FXML private void logout() { SessionManager.clear(); SceneManager.loadScene(Constants.LOGIN, "ورود"); }
     private void showError(String message) { Alert alert = new Alert(Alert.AlertType.ERROR); alert.setHeaderText(null); alert.setContentText(message); alert.showAndWait(); }
