@@ -5,13 +5,13 @@ import divar.dto.response.LoginResponse;
 import divar.network.ApiException;
 import divar.service.AuthService;
 import divar.util.Constants;
-import divar.util.SessionManager;
 import divar.util.Validator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import divar.session.SessionManager;
 
 import java.io.IOException;
 
@@ -46,8 +46,6 @@ public class LoginController {
 
         try {
             LoginResponse response = authService.login(username, password);
-
-            SessionManager.setToken(response.getToken());
 
             SessionManager.setToken(response.getToken());
             SessionManager.setUserId(response.getUserId());
