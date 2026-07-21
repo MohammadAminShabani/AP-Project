@@ -25,6 +25,7 @@ public final class Constants {
     public static final String CREATE_AD = "CreateAdvertisement.fxml";
     public static final String EDIT_AD = "EditAdvertisement.fxml";
     public static final String ADVERTISEMENT = "Advertisement.fxml";
+    public static final String RATING = "Rating.fxml";
 
     // =======================
     // API Endpoints

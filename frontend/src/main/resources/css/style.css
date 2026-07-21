@@ -86,3 +86,37 @@
     -fx-padding: 5px 10px;
     -fx-background-radius: 14px;
 }
+
+/* ===== Chat bubbles ===== */
+.chat-bubble {
+    -fx-background-radius: 16px;
+    -fx-padding: 10px 14px;
+}
+.chat-bubble-mine {
+    -fx-background-color: #a62626;
+}
+.chat-bubble-mine .chat-bubble-text { -fx-text-fill: white; -fx-font-size: 13px; }
+.chat-bubble-mine .chat-bubble-meta { -fx-text-fill: rgba(255,255,255,.75); -fx-font-size: 10px; }
+.chat-bubble-theirs {
+    -fx-background-color: white;
+    -fx-border-color: #ededed;
+    -fx-border-radius: 16px;
+}
+.chat-bubble-theirs .chat-bubble-text { -fx-text-fill: #242424; -fx-font-size: 13px; }
+.chat-bubble-theirs .chat-bubble-meta { -fx-text-fill: #999; -fx-font-size: 10px; }
+
+/* ===== Empty state ===== */
+.empty-state { -fx-text-fill: #999; -fx-font-size: 14px; -fx-padding: 40px 0 0 0; }
+
+/* ===== Conversation / favorite list rows ===== */
+.conversation-cell {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-border-color: #ededed;
+    -fx-border-radius: 14px;
+    -fx-padding: 14px 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,.04), 8, 0, 0, 2);
+}
+.conversation-title { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #222; }
+.conversation-meta { -fx-font-size: 12px; -fx-text-fill: #888; }
+.conversation-last-message { -fx-font-size: 13px; -fx-text-fill: #555; }

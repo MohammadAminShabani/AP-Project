@@ -15,7 +15,7 @@ import javafx.scene.control.ListView;
 import java.io.IOException;
 import java.util.List;
 
-public class FavoriteController {
+public class FavoriteControllerFront {
 
     @FXML
     private ListView<AdvertisementResponse> favoriteList;
