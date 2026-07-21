@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="divar.controller.MessageControllerFront">
 
-</AnchorPane>
+    <top>
+
+        <HBox alignment="CENTER_LEFT">
+
+            <padding>
+                <Insets top="10"
+                        right="10"
+                        left="10"
+                        bottom="10"/>
+            </padding>
+
+            <Label text="Chat with "/>
+
+            <Label fx:id="lblUser"
+                   style="-fx-font-weight:bold;
+                          -fx-font-size:16px;"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <Button text="Refresh"
+                    onAction="#refresh"/>
+
+        </HBox>
+
+    </top>
+
+    <center>
+
+        <ListView fx:id="messageList"/>
+
+    </center>
+
+    <bottom>
+
+        <HBox spacing="10">
+
+            <padding>
+                <Insets top="10"
+                        right="10"
+                        left="10"
+                        bottom="10"/>
+            </padding>
+
+            <TextField fx:id="txtMessage"
+                       promptText="Type your message..."
+                       HBox.hgrow="ALWAYS"/>
+
+            <Button fx:id="btnSend"
+                    text="Send"
+                    onAction="#sendMessage"/>
+
+        </HBox>
+
+    </bottom>
+
+</BorderPane>
