@@ -41,4 +41,9 @@ public class CategoryResponse {
     public void setParentCategoryId(Long parentCategoryId) {
         this.parentCategoryId = parentCategoryId;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
