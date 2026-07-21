@@ -292,6 +292,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             advertisement.setCity(city);
         }
 
+        advertisement.setStatus(
+                AdStatus.PENDING
+        );
+
         Advertisement updated = advertisementRepository.save(advertisement);
 
         return mapToResponse(updated);
