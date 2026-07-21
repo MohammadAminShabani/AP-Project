@@ -22,4 +22,8 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, Lo
     List<Advertisement> findByStatus(AdStatus status);
 
     List<Advertisement> findByCategoryAndCity(Category category, City city);
+
+    List<Advertisement> findByCategoryAndStatus(Category category, AdStatus status);
+
+    List<Advertisement> findByCityAndStatus(City city, AdStatus status);
 }
