@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -7,110 +6,46 @@
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="divar.controller.LoginController"
-            prefWidth="1200"
-            prefHeight="700"
+            prefWidth="1200" prefHeight="700"
             stylesheets="@../css/style.css">
 
     <left>
-
-        <AnchorPane prefWidth="500"
-                    styleClass="left-panel">
-
-            <children>
-
-                <VBox alignment="CENTER"
-                      spacing="20"
-                      AnchorPane.topAnchor="0"
-                      AnchorPane.bottomAnchor="0"
-                      AnchorPane.leftAnchor="0"
-                      AnchorPane.rightAnchor="0">
-
-                    <Label
-                            text="دیوار"
-                            styleClass="logo"/>
-
-                    <Label
-                            text="خرید و فروش بدون واسطه"
-                            styleClass="logo-subtitle"/>
-
-                    <Separator prefWidth="250"/>
-
-                    <Label
-                            text="به دیوار خوش آمدید"
-                            styleClass="big-text"/>
-
-                    <Label
-                            wrapText="true"
-                            maxWidth="330"
-                            textAlignment="CENTER"
-                            text="آگهی ثبت کن، جستجو کن، خرید و فروش کن."
-                            styleClass="small-text"/>
-
-                </VBox>
-
-            </children>
-
-        </AnchorPane>
-
+        <StackPane prefWidth="460" styleClass="login-brand-panel">
+            <VBox alignment="CENTER" spacing="18" maxWidth="350">
+                <Label text="دیوار" styleClass="login-logo"/>
+                <Label text="خرید و فروش ساده، سریع و مطمئن" styleClass="login-brand-subtitle"/>
+                <Separator maxWidth="230" opacity="0.45"/>
+                <Label text="به دیوار خوش آمدید" styleClass="login-brand-title"/>
+                <Label text="آگهی‌ها را پیدا کن، با فروشنده‌ها ارتباط بگیر و کالاهای خودت را به‌سادگی برای فروش بگذار." styleClass="login-brand-description" wrapText="true" textAlignment="CENTER"/>
+            </VBox>
+        </StackPane>
     </left>
 
     <center>
+        <StackPane styleClass="login-page">
+            <VBox alignment="CENTER" spacing="18" maxWidth="420" styleClass="login-card">
+                <Label text="ورود به حساب" styleClass="login-title"/>
+                <Label text="برای ادامه وارد حساب کاربری خود شوید" styleClass="login-subtitle"/>
 
-        <StackPane>
-
-            <children>
-
-                <VBox alignment="CENTER"
-                      spacing="18"
-                      maxWidth="420"
-                      styleClass="card">
-
-                    <padding>
-
-                        <Insets top="45"
-                                right="45"
-                                bottom="45"
-                                left="45"/>
-
-                    </padding>
-
-                    <Label
-                            text="ورود به حساب"
-                            styleClass="title"/>
-
-                    <Label
-                            text="نام کاربری و رمز عبور خود را وارد کنید"
-                            styleClass="subtitle"/>
-
-                    <TextField
-                            fx:id="usernameField"
-                            promptText="نام کاربری"
-                            onAction="#login"/>
-
-                    <PasswordField
-                            fx:id="passwordField"
-                            promptText="رمز عبور"
-                            onAction="#login"/>
-
-                    <Button
-                            fx:id="loginButton"
-                            text="ورود"
-                            onAction="#login"/>
-
-                    <Label
-                            fx:id="messageLabel"
-                            styleClass="error"/>
-
-                    <Hyperlink
-                            text="حساب کاربری ندارید؟ ثبت نام"
-                            onAction="#goToRegister"/>
-
+                <VBox spacing="7">
+                    <Label text="نام کاربری" styleClass="login-field-label"/>
+                    <TextField fx:id="usernameField" promptText="نام کاربری" styleClass="login-input" onAction="#login"/>
                 </VBox>
 
-            </children>
+                <VBox spacing="7">
+                    <Label text="رمز عبور" styleClass="login-field-label"/>
+                    <PasswordField fx:id="passwordField" promptText="رمز عبور" styleClass="login-input" onAction="#login"/>
+                </VBox>
 
+                <Button fx:id="loginButton" text="ورود به حساب" maxWidth="Infinity" styleClass="login-button" onAction="#login"/>
+                <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
+
+                <Separator/>
+                <HBox alignment="CENTER" spacing="5">
+                    <Label text="حساب کاربری ندارید؟" styleClass="login-muted"/>
+                    <Hyperlink text="ثبت نام کنید" onAction="#goToRegister"/>
+                </HBox>
+            </VBox>
         </StackPane>
-
     </center>
-
 </BorderPane>

@@ -1,56 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="divar.controller.HomeController"
-            prefWidth="1200"
-            prefHeight="700"
-            styleClass="root"
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.HomeController" prefWidth="1280" prefHeight="760"
             stylesheets="@../css/style.css">
-
+    <top>
+        <VBox styleClass="home-header" spacing="16">
+            <padding><Insets top="18" right="32" bottom="18" left="32"/></padding>
+            <HBox alignment="CENTER_RIGHT" spacing="14">
+                <Label text="دیوار" styleClass="brand-mark"/>
+                <Label fx:id="welcomeLabel" styleClass="welcome-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="ثبت آگهی" styleClass="primary-button" onAction="#createAdvertisement"/>
+                <Button fx:id="adminPanelButton" text="پنل مدیریت" styleClass="ghost-button" managed="false" visible="false" onAction="#openAdminPanel"/>
+                <Button text="خروج" styleClass="ghost-button" onAction="#logout"/>
+            </HBox>
+            <VBox spacing="6" alignment="CENTER_RIGHT">
+                <Label text="هر چیزی که لازم داری، همین‌جاست" styleClass="hero-title"/>
+                <Label text="آگهی‌های جدید را پیدا کن یا کالای خودت را برای فروش ثبت کن." styleClass="hero-subtitle"/>
+            </VBox>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <TextField fx:id="searchField" promptText="جست‌وجو در عنوان و توضیحات آگهی..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="sortComboBox" promptText="مرتب‌سازی" styleClass="sort-combo"/>
+                <Button text="تازه‌سازی" styleClass="ghost-button" onAction="#refresh"/>
+            </HBox>
+        </VBox>
+    </top>
     <center>
-
-        <StackPane>
-
-            <children>
-
-                <VBox alignment="CENTER"
-                      spacing="16"
-                      maxWidth="460"
-                      styleClass="card">
-
-                    <padding>
-                        <Insets top="45" right="45" bottom="45" left="45"/>
-                    </padding>
-
-                    <Label
-                            fx:id="welcomeLabel"
-                            styleClass="title"/>
-
-                    <Label
-                            wrapText="true"
-                            maxWidth="360"
-                            textAlignment="CENTER"
-                            text="ورود شما با موفقیت انجام شد. صفحه اصلی آگهی‌ها در مراحل بعدی این‌جا تکمیل می‌شود."
-                            styleClass="subtitle"/>
-
-                    <Separator prefWidth="250"/>
-
-                    <Button
-                            text="خروج از حساب کاربری"
-                            styleClass="button, button-secondary"
-                            onAction="#logout"/>
-
-                </VBox>
-
-            </children>
-
-        </StackPane>
-
+        <VBox spacing="14" styleClass="content-shell">
+            <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+            <HBox alignment="CENTER_RIGHT">
+                <Label text="آخرین آگهی‌ها" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="resultCountLabel" styleClass="result-count"/>
+            </HBox>
+            <ListView fx:id="advertisementListView" VBox.vgrow="ALWAYS" styleClass="ads-list"/>
+        </VBox>
     </center>
-
 </BorderPane>
