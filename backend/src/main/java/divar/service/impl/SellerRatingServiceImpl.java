@@ -14,6 +14,7 @@ import divar.repository.SellerRatingRepository;
 import divar.repository.UserRepository;
 import divar.service.SellerRatingService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class SellerRatingServiceImpl implements SellerRatingService {
     }
 
     @Override
+    @Transactional
     public SellerRatingResponse rateSeller(Long buyerId, Long advertisementId,
                                            RateSellerRequest request) {
 
@@ -46,7 +48,8 @@ public class SellerRatingServiceImpl implements SellerRatingService {
         Advertisement advertisement = advertisementRepository.findById(advertisementId)
                 .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
-        User seller = advertisement.getOwner();
+        User seller = userRepository.findById(advertisement.getOwner().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Seller not found"));
 
         if (buyer.getId().equals(seller.getId())) {
             throw new BadRequestException("You cannot rate yourself");
