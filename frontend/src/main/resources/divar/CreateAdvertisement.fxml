@@ -1,53 +1,190 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="divar.controller.CreateAdvertisementController" prefWidth="1000" prefHeight="720"
-            nodeOrientation="RIGHT_TO_LEFT"
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.CreateAdvertisementController"
+            prefWidth="1000"
+            prefHeight="720"
             stylesheets="@../css/style.css">
+
+    <!-- ================= HEADER ================= -->
+
     <top>
-        <HBox alignment="CENTER_LEFT" styleClass="detail-header">
+        <HBox alignment="CENTER_LEFT"
+              spacing="15"
+              styleClass="detail-header">
+
             <padding>
-                <Insets top="18" right="30" bottom="18" left="30"/>
+                <Insets top="18"
+                        right="30"
+                        bottom="18"
+                        left="30"/>
             </padding>
-            <Label text="ثبت آگهی" styleClass="brand-mark"/>
+
+            <Label text="ثبت آگهی"
+                   styleClass="brand-mark"/>
+
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="بازگشت" styleClass="ghost-button" onAction="#back"/>
+
+            <Button text="بازگشت"
+                    styleClass="ghost-button"
+                    onAction="#back"/>
+
         </HBox>
     </top>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
     <center>
-        <ScrollPane fitToWidth="true" styleClass="detail-scroll">
+
+        <ScrollPane fitToWidth="true"
+                    styleClass="detail-scroll">
+
             <content>
-                <VBox alignment="TOP_RIGHT" spacing="18" styleClass="form-card">
+
+                <VBox alignment="TOP_RIGHT"
+                      spacing="18"
+                      styleClass="form-card">
+
                     <padding>
-                        <Insets top="30" right="44" bottom="36" left="44"/>
+                        <Insets top="30"
+                                right="44"
+                                bottom="36"
+                                left="44"/>
                     </padding>
-                    <Label text="آگهی جدیدت را بساز" styleClass="form-title"/>
-                    <Label text="اطلاعات را دقیق وارد کن تا آگهی‌ات بهتر دیده شود." styleClass="hero-subtitle"/>
-                    <GridPane hgap="18" vgap="8" alignment="TOP_RIGHT">
+
+
+                    <!-- ================= TITLE ================= -->
+
+                    <Label text="آگهی جدیدت را بساز"
+                           styleClass="form-title"
+                           maxWidth="Infinity"
+                           alignment="CENTER_RIGHT"/>
+
+
+                    <Label text="اطلاعات را دقیق وارد کن تا آگهی‌ات بهتر دیده شود."
+                           styleClass="hero-subtitle"
+                           maxWidth="Infinity"
+                           alignment="CENTER_RIGHT"/>
+
+
+                    <!-- ================= BASIC INFORMATION ================= -->
+
+                    <GridPane hgap="18"
+                              vgap="8"
+                              maxWidth="Infinity"
+                              nodeOrientation="RIGHT_TO_LEFT">
+
                         <columnConstraints>
-                            <ColumnConstraints hgrow="ALWAYS"/>
-                            <ColumnConstraints hgrow="ALWAYS"/>
+
+                            <ColumnConstraints hgrow="ALWAYS"
+                                               fillWidth="true"/>
+
+                            <ColumnConstraints hgrow="ALWAYS"
+                                               fillWidth="true"/>
+
                         </columnConstraints>
-                        <Label text="عنوان آگهی" styleClass="field-label" GridPane.columnIndex="0"
+
+
+                        <!-- ===== ROW 0 : LABELS ===== -->
+
+
+                        <!-- ستون سمت راست -->
+
+                        <Label text="عنوان آگهی"
+                               styleClass="field-label"
+                               GridPane.columnIndex="0"
                                GridPane.rowIndex="0"/>
-                        <Label text="قیمت (تومان)" styleClass="field-label" GridPane.columnIndex="1"
+
+
+                        <!-- ستون سمت چپ -->
+
+                        <Label text="قیمت (تومان)"
+                               styleClass="field-label"
+                               GridPane.columnIndex="1"
                                GridPane.rowIndex="0"/>
-                        <TextField fx:id="titleField" promptText="مثلاً آیفون ۱۳ سالم" styleClass="form-input"
-                                   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="priceField" promptText="35000000" styleClass="form-input"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <Label text="شهر" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <Label text="دسته‌بندی" styleClass="field-label" GridPane.columnIndex="1"
+
+
+                        <!-- ===== ROW 1 : INPUTS ===== -->
+
+
+                        <!-- عنوان آگهی -->
+
+                        <TextField fx:id="titleField"
+                                   promptText="مثلاً آیفون ۱۳ سالم"
+                                   styleClass="form-input"
+                                   maxWidth="Infinity"
+                                   nodeOrientation="RIGHT_TO_LEFT"
+                                   GridPane.columnIndex="0"
+                                   GridPane.rowIndex="1"/>
+
+
+                        <!-- قیمت -->
+
+                        <TextField fx:id="priceField"
+                                   promptText="35000000"
+                                   styleClass="form-input"
+                                   maxWidth="Infinity"
+                                   nodeOrientation="LEFT_TO_RIGHT"
+                                   GridPane.columnIndex="1"
+                                   GridPane.rowIndex="1"/>
+
+
+                        <!-- ===== ROW 2 : LABELS ===== -->
+
+
+                        <!-- شهر -->
+
+                        <Label text="شهر"
+                               styleClass="field-label"
+                               GridPane.columnIndex="0"
                                GridPane.rowIndex="2"/>
-                        <ComboBox fx:id="cityComboBox" maxWidth="Infinity" styleClass="form-input"
-                                  GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                        <ComboBox fx:id="categoryComboBox" maxWidth="Infinity" styleClass="form-input"
-                                  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+
+                        <!-- دسته‌بندی -->
+
+                        <Label text="دسته‌بندی"
+                               styleClass="field-label"
+                               GridPane.columnIndex="1"
+                               GridPane.rowIndex="2"/>
+
+
+                        <!-- ===== ROW 3 : COMBOBOXES ===== -->
+
+
+                        <!-- شهر -->
+
+                        <ComboBox fx:id="cityComboBox"
+                                  maxWidth="Infinity"
+                                  styleClass="form-input"
+                                  nodeOrientation="RIGHT_TO_LEFT"
+                                  GridPane.columnIndex="0"
+                                  GridPane.rowIndex="3"/>
+
+
+                        <!-- دسته‌بندی -->
+
+                        <ComboBox fx:id="categoryComboBox"
+                                  maxWidth="Infinity"
+                                  styleClass="form-input"
+                                  nodeOrientation="RIGHT_TO_LEFT"
+                                  GridPane.columnIndex="1"
+                                  GridPane.rowIndex="3"/>
+
                     </GridPane>
-                    <Label text="توضیحات" styleClass="field-label"/>
+
+
+                    <!-- ================= DESCRIPTION ================= -->
+
+                    <Label text="توضیحات"
+                           styleClass="field-label"/>
+
+
                     <TextArea fx:id="descriptionArea"
                               prefHeight="260.0"
                               minHeight="260.0"
@@ -56,12 +193,19 @@
                               promptText="مثلاً: وضعیت کالا، ویژگی‌ها و هر چیزی که خریدار باید بداند..."
                               styleClass="description-input"
                               nodeOrientation="RIGHT_TO_LEFT"/>
-                    <Label text="تصاویر آگهی"/>
+
+
+                    <!-- ================= IMAGES ================= -->
+
+                    <Label text="تصاویر آگهی"
+                           styleClass="field-label"/>
+
 
                     <HBox spacing="10"
                           alignment="CENTER_LEFT">
 
                         <Button text="انتخاب تصاویر"
+                                styleClass="ghost-button"
                                 onAction="#chooseImages"/>
 
                         <Label fx:id="selectedImagesLabel"
@@ -70,14 +214,34 @@
 
                     </HBox>
 
+
+                    <!-- ================= SELECTED IMAGES ================= -->
+
                     <ListView fx:id="selectedImagesListView"
                               prefHeight="120"/>
-                    <HBox spacing="12" alignment="CENTER_LEFT">
-                        <Button text="ثبت آگهی" styleClass="primary-button" onAction="#createAdvertisement"/>
-                        <Button text="انصراف" styleClass="ghost-button" onAction="#back"/>
+
+
+                    <!-- ================= ACTION BUTTONS ================= -->
+
+                    <HBox spacing="12"
+                          alignment="CENTER_LEFT">
+
+                        <Button text="ثبت آگهی"
+                                styleClass="primary-button"
+                                onAction="#createAdvertisement"/>
+
+                        <Button text="انصراف"
+                                styleClass="ghost-button"
+                                onAction="#back"/>
+
                     </HBox>
+
                 </VBox>
+
             </content>
+
         </ScrollPane>
+
     </center>
+
 </BorderPane>

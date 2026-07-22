@@ -8,20 +8,31 @@ import javafx.stage.Stage;
 
 public class MainApplication extends Application {
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
 
-        Font.loadFont(
-                MainApplication.class.getResourceAsStream("/fonts/Vazirmatn.ttf"),
-                14
-        );
-
+        loadFonts();
 
         SceneManager.setStage(stage);
-        SceneManager.loadScene(Constants.HOME, "خانه");
+        SceneManager.loadScene("home.fxml", "خانه");
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private void loadFonts() {
+
+        Font.loadFont(MainApplication.class.getResourceAsStream("/fonts/Vazirmatn-Regular.ttf"), 14);
+
+        Font.loadFont(MainApplication.class.getResourceAsStream("/fonts/Vazirmatn-Medium.ttf"), 14);
+
+        Font.loadFont(MainApplication.class.getResourceAsStream("/fonts/Vazirmatn-SemiBold.ttf"), 14);
+
+        Font.loadFont(MainApplication.class.getResourceAsStream("/fonts/Vazirmatn-Bold.ttf"), 14);
+
+        Font.loadFont(MainApplication.class.getResourceAsStream("/fonts/Vazirmatn-ExtraBold.ttf"), 14);
+
+        System.out.println("Vazirmatn fonts loaded.");
     }
 }

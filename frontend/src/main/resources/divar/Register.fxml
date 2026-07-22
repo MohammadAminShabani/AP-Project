@@ -16,7 +16,7 @@
                 <Label text="خرید و فروش ساده، سریع و مطمئن" styleClass="login-brand-subtitle"/>
                 <Separator maxWidth="230" opacity="0.45"/>
                 <Label text="به جمع دیواری‌ها بپیوندید" styleClass="login-brand-title"/>
-                <Label text="حساب کاربری خودت را بساز، آگهی ثبت کن و خرید و فروش را ساده‌تر تجربه کن." styleClass="login-brand-description" wrapText="true" textAlignment="RIGHT"/>
+                <Label text="حساب کاربری خودت را بساز، آگهی ثبت کن و خرید و فروش را ساده‌تر تجربه کن." styleClass="login-brand-description" wrapText="true" textAlignment="CENTER"/>
             </VBox>
         </StackPane>
     </right>

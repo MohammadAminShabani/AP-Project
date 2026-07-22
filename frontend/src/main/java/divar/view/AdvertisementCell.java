@@ -74,7 +74,7 @@ public class AdvertisementCell extends ListCell<AdvertisementResponse> {
         imageFrame.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
         imageFrame.setMinSize(IMAGE_WIDTH, IMAGE_HEIGHT);
         imageFrame.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
-        imageFrame.setAlignment(Pos.TOP_LEFT);
+        imageFrame.setAlignment(Pos.CENTER);
 
         statusBadge.getStyleClass().add("ad-card-badge");
         StackPane.setMargin(statusBadge, new Insets(8));

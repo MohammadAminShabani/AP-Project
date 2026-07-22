@@ -6,7 +6,6 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="divar.controller.RatingController" prefWidth="560" prefHeight="560"
-            nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
 
     <top>
@@ -32,7 +31,7 @@
 
             <Label text="نظر (اختیاری)" styleClass="field-label"/>
             <TextArea fx:id="commentField" prefHeight="140" wrapText="true"
-                      promptText="تجربه‌ات از خرید را بنویس..." styleClass="form-input"/>
+                      promptText="تجربه‌ات از خرید را بنویس..." styleClass="form-input" nodeOrientation="RIGHT_TO_LEFT"/>
 
             <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
 
