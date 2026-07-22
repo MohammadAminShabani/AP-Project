@@ -14,11 +14,39 @@
                 <Label text="دیوار" styleClass="brand-mark"/>
                 <Label fx:id="welcomeLabel" styleClass="welcome-text"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="ثبت آگهی" styleClass="primary-button" onAction="#createAdvertisement"/>
-                <Button text="گفتگوها" styleClass="ghost-button" onAction="#openConversations"/>
-                <Button text="علاقه‌مندی‌ها" styleClass="ghost-button" onAction="#openFavorites"/>
-                <Button fx:id="adminPanelButton" text="پنل مدیریت" styleClass="ghost-button" managed="false" visible="false" onAction="#openAdminPanel"/>
-                <Button text="خروج" styleClass="ghost-button" onAction="#logout"/>
+                <Button fx:id="loginButton"
+                        text="ورود"
+                        styleClass="primary-button"
+                        onAction="#openLogin"/>
+
+                <Button fx:id="registerButton"
+                        text="ثبت نام"
+                        styleClass="ghost-button"
+                        onAction="#openRegister"/>
+
+                <Button fx:id="createAdButton"
+                        text="ثبت آگهی"
+                        styleClass="primary-button"
+                        onAction="#createAdvertisement"/>
+
+                <Button fx:id="conversationButton"
+                        text="گفتگوها"
+                        styleClass="ghost-button"
+                        onAction="#openConversations"/>
+
+                <Button fx:id="favoriteButton"
+                        text="علاقه‌مندی‌ها"
+                        styleClass="ghost-button"
+                        onAction="#openFavorites"/>
+
+                <Button fx:id="logoutButton"
+                        text="خروج"
+                        styleClass="ghost-button"
+                        onAction="#logout"/>
+                <Button fx:id="adminPanelButton"
+                        text="پنل مدیریت"
+                        styleClass="ghost-button"
+                        onAction="#openAdminPanel"/>
             </HBox>
             <VBox spacing="6" alignment="CENTER_LEFT">
                 <Label text="هر چیزی که لازم داری، همین‌جاست" styleClass="hero-title"/>

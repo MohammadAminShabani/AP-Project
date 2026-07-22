@@ -24,13 +24,57 @@ public class HomeController {
     @FXML private Button adminPanelButton;
     @FXML private TextField searchField;
     @FXML private ComboBox<String> sortComboBox;
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Button registerButton;
+
+    @FXML
+    private Button createAdButton;
+
+    @FXML
+    private Button conversationButton;
+
+    @FXML
+    private Button favoriteButton;
+
+    @FXML
+    private Button logoutButton;
 
     private final AdvertisementService advertisementService = new AdvertisementService();
     private List<AdvertisementResponse> allAdvertisements = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        welcomeLabel.setText("خوش آمدی " + SessionManager.getUsername());
+        if (SessionManager.getToken() != null) {
+            welcomeLabel.setText("سلام، " + SessionManager.getUsername() + " 👋");
+        }
+        else {
+            welcomeLabel.setText("به دیوار خوش آمدید 👋");
+        }
+
+        boolean loggedIn = isLoggedIn();
+
+        loginButton.setVisible(!loggedIn);
+        loginButton.setManaged(!loggedIn);
+
+        registerButton.setVisible(!loggedIn);
+        registerButton.setManaged(!loggedIn);
+
+        createAdButton.setVisible(loggedIn);
+        createAdButton.setManaged(loggedIn);
+
+        conversationButton.setVisible(loggedIn);
+        conversationButton.setManaged(loggedIn);
+
+        favoriteButton.setVisible(loggedIn);
+        favoriteButton.setManaged(loggedIn);
+
+        logoutButton.setVisible(loggedIn);
+        logoutButton.setManaged(loggedIn);
+
+
         boolean isAdmin = "ADMIN".equalsIgnoreCase(SessionManager.getRole());
         adminPanelButton.setVisible(isAdmin); adminPanelButton.setManaged(isAdmin);
         advertisementListView.setCellFactory(list -> new divar.view.AdvertisementCell());
@@ -77,12 +121,80 @@ public class HomeController {
         return Comparator.comparing((AdvertisementResponse ad) -> ad.getId() == null ? 0L : ad.getId()).reversed();
     }
 
+    private boolean isLoggedIn() {
+        return SessionManager.getToken() != null;
+    }
+
     private void openAdvertisement(AdvertisementResponse advertisement) { AdvertisementSession.setAdvertisement(advertisement); SceneManager.loadScene(Constants.ADVERTISEMENT, "جزئیات آگهی"); }
     @FXML private void refresh() { loadAdvertisements(); }
-    @FXML private void createAdvertisement() { SceneManager.loadScene(Constants.CREATE_AD, "ثبت آگهی"); }
-    @FXML private void openConversations() { SceneManager.loadScene(Constants.CONVERSATIONS, "گفتگوها"); }
-    @FXML private void openFavorites() { SceneManager.loadScene(Constants.FAVORITES, "علاقه‌مندی‌ها"); }
-    @FXML private void openAdminPanel() { SceneManager.loadScene(Constants.ADMIN, "پنل مدیریت"); }
-    @FXML private void logout() { SessionManager.clear(); SceneManager.loadScene(Constants.LOGIN, "ورود"); }
-    private void showError(String message) { Alert alert = new Alert(Alert.AlertType.ERROR); alert.setHeaderText(null); alert.setContentText(message); alert.showAndWait(); }
+    @FXML
+    private void createAdvertisement() {
+
+        if (!isLoggedIn()) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
+
+        SceneManager.loadScene(Constants.CREATE_AD, "ثبت آگهی");
+    }
+
+    @FXML
+    private void openConversations() {
+
+        if (!isLoggedIn()) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
+
+        SceneManager.loadScene(Constants.CONVERSATIONS, "گفتگوها");
+    }
+
+    @FXML
+    private void openFavorites() {
+
+        if (!isLoggedIn()) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
+
+        SceneManager.loadScene(Constants.FAVORITES, "علاقه‌مندی‌ها");
+    }
+
+    @FXML
+    private void openAdminPanel() {
+
+        if (!isLoggedIn()) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
+
+        if (!"ADMIN".equalsIgnoreCase(SessionManager.getRole())) {
+            return;
+        }
+
+        SceneManager.loadScene(Constants.ADMIN, "پنل مدیریت");
+    }
+
+    @FXML
+    private void logout() {
+
+        SessionManager.clear();
+
+        SceneManager.loadScene(Constants.HOME, "خانه");
+
+    }    private void showError(String message) { Alert alert = new Alert(Alert.AlertType.ERROR); alert.setHeaderText(null); alert.setContentText(message); alert.showAndWait(); }
+
+    @FXML
+    private void openLogin() {
+
+        SceneManager.loadScene(Constants.LOGIN, "ورود");
+
+    }
+
+    @FXML
+    private void openRegister() {
+
+        SceneManager.loadScene(Constants.REGISTER, "ثبت نام");
+
+    }
 }

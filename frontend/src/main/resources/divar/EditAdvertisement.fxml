@@ -33,8 +33,14 @@
                         <ComboBox fx:id="cityComboBox" maxWidth="Infinity" styleClass="form-input" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                         <ComboBox fx:id="categoryComboBox" maxWidth="Infinity" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                     </GridPane>
-                    <Label text="توضیحات" styleClass="field-label"/>
-                    <TextArea fx:id="descriptionArea" prefHeight="220" wrapText="true" styleClass="form-input"/>
+                    <TextArea fx:id="descriptionArea"
+                              prefHeight="260.0"
+                              minHeight="260.0"
+                              prefRowCount="10"
+                              wrapText="true"
+                              promptText="مثلاً: وضعیت کالا، ویژگی‌ها و هر چیزی که خریدار باید بداند..."
+                              styleClass="description-input"
+                              nodeOrientation="RIGHT_TO_LEFT"/>
                     <HBox spacing="12" alignment="CENTER_LEFT">
                         <Button text="ذخیره تغییرات" styleClass="primary-button" onAction="#updateAdvertisement"/>
                         <Button text="انصراف" styleClass="ghost-button" onAction="#back"/>

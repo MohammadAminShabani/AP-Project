@@ -17,8 +17,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdvertisementControllerFront {
@@ -65,6 +71,28 @@ public class AdvertisementControllerFront {
     @FXML
     private Button rateButton;
 
+    @FXML
+    private HBox imageGallery;
+
+    @FXML
+    private ImageView mainImageView;
+
+    @FXML
+    private HBox thumbnailGallery;
+
+    @FXML
+    private Button previousImageButton;
+
+    @FXML
+    private Button nextImageButton;
+
+    @FXML
+    private VBox noImageBox;
+
+    private List<String> imageUrls = new ArrayList<>();
+
+    private int currentImageIndex = 0;
+
     private final AdvertisementService advertisementService =
             new AdvertisementService();
     private final ConversationService conversationService =
@@ -107,6 +135,8 @@ public class AdvertisementControllerFront {
         rateLabel.setText("امتیاز: " + advertisement.getAverageRate());
 
         statusLabel.setText("وضعیت: " + statusLabelFa(advertisement.getStatus()));
+
+        loadImages();
 
         descriptionArea.setText(advertisement.getDescription());
 
@@ -249,6 +279,11 @@ public class AdvertisementControllerFront {
     @FXML
     private void toggleFavorite() {
 
+        if (SessionManager.getToken() == null) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
+
         try {
 
             if (isFavorite) {
@@ -275,12 +310,22 @@ public class AdvertisementControllerFront {
     @FXML
     private void openRating() {
 
+        if (SessionManager.getToken() == null) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
+
         SceneManager.loadScene(Constants.RATING, "امتیازدهی به فروشنده");
 
     }
 
     @FXML
     private void openConversation() {
+
+        if (SessionManager.getToken() == null) {
+            SceneManager.loadScene(Constants.LOGIN, "ورود");
+            return;
+        }
 
         System.out.println("Button clicked");
 
@@ -309,5 +354,209 @@ public class AdvertisementControllerFront {
             messageLabel.setText(message);
         }
     }
+
+    private void loadImages() {
+
+        imageUrls.clear();
+        thumbnailGallery.getChildren().clear();
+
+        if (advertisement.getImageUrls() == null ||
+                advertisement.getImageUrls().isEmpty()) {
+
+            showNoImagePlaceholder();
+            return;
+        }
+
+        showImageGallery();
+
+        imageUrls.addAll(advertisement.getImageUrls());
+
+        currentImageIndex = 0;
+
+        showImage(currentImageIndex);
+
+        createThumbnails();
+
+        updateNavigationButtons();
+    }
+
+    private void showImage(int index) {
+
+        if (imageUrls.isEmpty()) {
+            showNoImagePlaceholder();
+            return;
+        }
+
+        showImageGallery();
+
+        String imageUrl = imageUrls.get(index);
+
+        String finalUrl = imageUrl.startsWith("http")
+                ? imageUrl
+                : "http://localhost:8080" + imageUrl;
+
+        Image image = new Image(
+                finalUrl,
+                600,
+                400,
+                true,
+                true,
+                true
+        );
+
+        mainImageView.setImage(image);
+
+        updateThumbnailSelection();
+    }
+
+
+    private void createThumbnails() {
+
+        thumbnailGallery.getChildren().clear();
+
+        for (int i = 0; i < imageUrls.size(); i++) {
+
+            final int index = i;
+
+            Image image = new Image(
+                    getFullImageUrl(imageUrls.get(i)),
+                    90,
+                    70,
+                    true,
+                    true,
+                    true
+            );
+
+            ImageView thumbnail = new ImageView(image);
+
+            thumbnail.setFitWidth(90);
+            thumbnail.setFitHeight(70);
+            thumbnail.setPreserveRatio(true);
+
+            thumbnail.getStyleClass().add("thumbnail");
+
+            thumbnail.setOnMouseClicked(event -> {
+
+                currentImageIndex = index;
+
+                showImage(currentImageIndex);
+
+                updateNavigationButtons();
+            });
+
+            thumbnailGallery.getChildren().add(thumbnail);
+        }
+
+        updateThumbnailSelection();
+    }
+
+
+    @FXML
+    private void showPreviousImage() {
+
+        if (imageUrls.isEmpty()) {
+            return;
+        }
+
+        currentImageIndex--;
+
+        if (currentImageIndex < 0) {
+            currentImageIndex = imageUrls.size() - 1;
+        }
+
+        showImage(currentImageIndex);
+
+        updateNavigationButtons();
+    }
+
+    @FXML
+    private void showNextImage() {
+
+        if (imageUrls.isEmpty()) {
+            return;
+        }
+
+        currentImageIndex++;
+
+        if (currentImageIndex >= imageUrls.size()) {
+            currentImageIndex = 0;
+        }
+
+        showImage(currentImageIndex);
+
+        updateNavigationButtons();
+    }
+
+    private String getFullImageUrl(String imageUrl) {
+
+        if (imageUrl.startsWith("http")) {
+            return imageUrl;
+        }
+
+        return "http://localhost:8080" + imageUrl;
+    }
+
+    private void updateNavigationButtons() {
+
+        boolean hasMultipleImages = imageUrls.size() > 1;
+
+        previousImageButton.setVisible(hasMultipleImages);
+        previousImageButton.setManaged(hasMultipleImages);
+
+        nextImageButton.setVisible(hasMultipleImages);
+        nextImageButton.setManaged(hasMultipleImages);
+
+        thumbnailGallery.setVisible(!imageUrls.isEmpty());
+        thumbnailGallery.setManaged(!imageUrls.isEmpty());
+    }
+
+    private void updateThumbnailSelection() {
+
+        for (int i = 0; i < thumbnailGallery.getChildren().size(); i++) {
+
+            javafx.scene.Node node =
+                    thumbnailGallery.getChildren().get(i);
+
+            node.getStyleClass().remove("selected-thumbnail");
+
+            if (i == currentImageIndex) {
+                node.getStyleClass().add("selected-thumbnail");
+            }
+        }
+    }
+    private void showNoImagePlaceholder() {
+
+        mainImageView.setImage(null);
+
+        mainImageView.setVisible(false);
+        mainImageView.setManaged(false);
+
+        noImageBox.setVisible(true);
+        noImageBox.setManaged(true);
+
+        previousImageButton.setVisible(false);
+        previousImageButton.setManaged(false);
+
+        nextImageButton.setVisible(false);
+        nextImageButton.setManaged(false);
+
+        thumbnailGallery.setVisible(false);
+        thumbnailGallery.setManaged(false);
+    }
+
+    private void showImageGallery() {
+
+        mainImageView.setVisible(true);
+        mainImageView.setManaged(true);
+
+        noImageBox.setVisible(false);
+        noImageBox.setManaged(false);
+
+        thumbnailGallery.setVisible(true);
+        thumbnailGallery.setManaged(true);
+    }
+
+
+
 
 }

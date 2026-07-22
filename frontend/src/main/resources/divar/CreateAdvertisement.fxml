@@ -48,9 +48,14 @@
                                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                     </GridPane>
                     <Label text="توضیحات" styleClass="field-label"/>
-                    <TextArea fx:id="descriptionArea" prefHeight="220" wrapText="true"
-                              promptText="وضعیت کالا، ویژگی‌ها و هر چیزی که خریدار باید بداند..."
-                              styleClass="form-input"/>
+                    <TextArea fx:id="descriptionArea"
+                              prefHeight="260.0"
+                              minHeight="260.0"
+                              prefRowCount="10"
+                              wrapText="true"
+                              promptText="مثلاً: وضعیت کالا، ویژگی‌ها و هر چیزی که خریدار باید بداند..."
+                              styleClass="description-input"
+                              nodeOrientation="RIGHT_TO_LEFT"/>
                     <Label text="تصاویر آگهی"/>
 
                     <HBox spacing="10"

@@ -1,82 +1,261 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="divar.controller.AdvertisementControllerFront" prefWidth="1050" prefHeight="700"
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.AdvertisementControllerFront"
+            prefWidth="1050"
+            prefHeight="700"
             nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
+
+    <!-- Header -->
     <top>
-        <HBox alignment="CENTER_LEFT" styleClass="detail-header">
-            <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
-            <Label text="جزئیات آگهی" styleClass="brand-mark"/>
+        <HBox alignment="CENTER_LEFT"
+              styleClass="detail-header">
+
+            <padding>
+                <Insets top="18"
+                        right="28"
+                        bottom="18"
+                        left="28"/>
+            </padding>
+
+            <Label text="جزئیات آگهی"
+                   styleClass="brand-mark"/>
+
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="بازگشت به آگهی‌ها" styleClass="ghost-button" onAction="#back"/>
+
+            <Button text="بازگشت به آگهی‌ها"
+                    styleClass="ghost-button"
+                    onAction="#back"/>
         </HBox>
     </top>
+
+
+    <!-- Main Content -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="detail-scroll">
+
+        <ScrollPane fitToWidth="true"
+                    styleClass="detail-scroll">
+
             <content>
-                <VBox spacing="18" styleClass="detail-shell">
-                    <padding><Insets top="28" right="36" bottom="36" left="36"/></padding>
-                    <HBox spacing="28" alignment="TOP_RIGHT">
-                        <VBox spacing="14" HBox.hgrow="ALWAYS">
-                            <ScrollPane fitToHeight="true"
-                                        fitToWidth="true"
-                                        prefHeight="220"
-                                        hbarPolicy="AS_NEEDED">
 
-                                <HBox fx:id="imageGallery"
+                <VBox spacing="18"
+                      styleClass="detail-shell">
+
+                    <padding>
+                        <Insets top="28"
+                                right="36"
+                                bottom="36"
+                                left="36"/>
+                    </padding>
+
+
+                    <HBox spacing="28"
+                          alignment="TOP_RIGHT">
+
+
+                        <!-- Advertisement Content -->
+                        <VBox spacing="14"
+                              HBox.hgrow="ALWAYS">
+
+
+                            <!-- IMAGE GALLERY -->
+                            <VBox spacing="12"
+                                  alignment="CENTER"
+                                  styleClass="image-section">
+
+
+                                <!-- Main Image -->
+                                <StackPane fx:id="mainImageContainer"
+                                           prefWidth="600"
+                                           prefHeight="400"
+                                           minHeight="400"
+                                           styleClass="main-image-container">
+
+
+                                    <!-- Main Image View -->
+                                    <ImageView fx:id="mainImageView"
+                                               fitWidth="600"
+                                               fitHeight="400"
+                                               preserveRatio="true"
+                                               smooth="true"/>
+
+                                    <!-- Placeholder -->
+                                    <VBox fx:id="noImageBox"
+                                          alignment="CENTER"
+                                          spacing="12"
+                                          styleClass="no-image-box">
+
+                                        <Label text="🖼"
+                                               styleClass="no-image-icon"/>
+
+                                        <Label text="تصویری برای این آگهی ثبت نشده است"
+                                               styleClass="no-image-title"/>
+
+                                        <Label text="فروشنده هنوز عکسی برای این کالا بارگذاری نکرده است."
+                                               wrapText="true"
+                                               styleClass="no-image-subtitle"/>
+
+                                    </VBox>
+
+                                    <!-- Previous Image -->
+                                    <Button fx:id="previousImageButton"
+                                            text="❯"
+                                            onAction="#showPreviousImage"
+                                            styleClass="gallery-arrow"
+                                            StackPane.alignment="CENTER_LEFT"/>
+
+
+                                    <!-- Next Image -->
+                                    <Button fx:id="nextImageButton"
+                                            text="❮"
+                                            onAction="#showNextImage"
+                                            styleClass="gallery-arrow"
+                                            StackPane.alignment="CENTER_RIGHT"/>
+
+                                </StackPane>
+
+
+                                <!-- Thumbnails -->
+                                <HBox fx:id="thumbnailGallery"
                                       spacing="10"
-                                      alignment="CENTER_LEFT"/>
+                                      alignment="CENTER"
+                                      styleClass="thumbnail-gallery"/>
 
-                            </ScrollPane>
-                            <Label fx:id="titleLabel" styleClass="detail-title" wrapText="true"/>
-                            <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Label fx:id="priceLabel" styleClass="detail-price"/>
-                                <Label fx:id="statusLabel" styleClass="status-pill"/>
+                            </VBox>
+
+
+                            <!-- Advertisement Title -->
+                            <Label fx:id="titleLabel"
+                                   styleClass="detail-title"
+                                   wrapText="true"/>
+
+
+                            <!-- Price and Status -->
+                            <HBox spacing="10"
+                                  alignment="CENTER_LEFT">
+
+                                <Label fx:id="priceLabel"
+                                       styleClass="detail-price"/>
+
+                                <Label fx:id="statusLabel"
+                                       styleClass="status-pill"/>
+
                             </HBox>
-                            <HBox spacing="18" styleClass="meta-row">
+
+
+                            <!-- City and Category -->
+                            <HBox spacing="18"
+                                  styleClass="meta-row">
+
                                 <Label fx:id="cityLabel"/>
+
                                 <Label fx:id="categoryLabel"/>
+
                             </HBox>
+
+
                             <Separator/>
-                            <Label text="توضیحات" styleClass="section-title"/>
-                            <TextArea fx:id="descriptionArea" editable="false" wrapText="true" prefHeight="220" styleClass="detail-description"/>
+
+
+                            <!-- Description -->
+                            <Label text="توضیحات"
+                                   styleClass="section-title"/>
+
+                            <TextArea fx:id="descriptionArea"
+                                      editable="false"
+                                      wrapText="true"
+                                      prefHeight="220"
+                                      maxHeight="300"
+                                      styleClass="detail-description"
+                                      nodeOrientation="LEFT_TO_RIGHT"/>
+
                         </VBox>
-                        <VBox prefWidth="260" spacing="12" styleClass="seller-card">
-                            <Label text="فروشنده" styleClass="card-caption"/>
-                            <Label fx:id="ownerLabel" styleClass="seller-name" wrapText="true"/>
-                            <Label fx:id="rateLabel" styleClass="seller-rate"/>
-                            <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
-                            <Button
-                                    fx:id="chatButton"
+
+
+                        <!-- Seller Card -->
+                        <VBox prefWidth="260"
+                              spacing="12"
+                              styleClass="seller-card">
+
+                            <Label text="فروشنده"
+                                   styleClass="card-caption"/>
+
+                            <Label fx:id="ownerLabel"
+                                   styleClass="seller-name"
+                                   wrapText="true"/>
+
+                            <Label fx:id="rateLabel"
+                                   styleClass="seller-rate"/>
+
+                            <Label fx:id="messageLabel"
+                                   styleClass="error"
+                                   wrapText="true"/>
+
+
+                            <!-- Chat -->
+                            <Button fx:id="chatButton"
                                     text="💬 گفتگو با فروشنده"
                                     onAction="#openConversation"
                                     styleClass="primary-button"
                                     maxWidth="Infinity"/>
-                            <Button
-                                    fx:id="favoriteButton"
+
+
+                            <!-- Favorite -->
+                            <Button fx:id="favoriteButton"
                                     text="☆ افزودن به علاقه‌مندی‌ها"
                                     onAction="#toggleFavorite"
                                     styleClass="ghost-button"
                                     maxWidth="Infinity"/>
-                            <Button
-                                    fx:id="rateButton"
+
+
+                            <!-- Rating -->
+                            <Button fx:id="rateButton"
                                     text="⭐ امتیازدهی به فروشنده"
                                     onAction="#openRating"
                                     styleClass="ghost-button"
                                     maxWidth="Infinity"/>
+
                         </VBox>
+
                     </HBox>
-                    <HBox fx:id="ownerActionsBox" spacing="10" alignment="CENTER_LEFT" managed="false" visible="false" styleClass="actions-bar">
-                        <Button text="ویرایش" styleClass="ghost-button" onAction="#editAdvertisement"/>
-                        <Button fx:id="markSoldButton" text="فروخته شد" styleClass="primary-button" onAction="#markAsSold"/>
-                        <Button text="حذف آگهی" styleClass="danger-button" onAction="#deleteAdvertisement"/>
+
+
+                    <!-- Owner Actions -->
+                    <HBox fx:id="ownerActionsBox"
+                          spacing="10"
+                          alignment="CENTER_LEFT"
+                          managed="false"
+                          visible="false"
+                          styleClass="actions-bar">
+
+                        <Button text="ویرایش"
+                                styleClass="ghost-button"
+                                onAction="#editAdvertisement"/>
+
+                        <Button fx:id="markSoldButton"
+                                text="فروخته شد"
+                                styleClass="primary-button"
+                                onAction="#markAsSold"/>
+
+                        <Button text="حذف آگهی"
+                                styleClass="danger-button"
+                                onAction="#deleteAdvertisement"/>
+
                     </HBox>
+
                 </VBox>
+
             </content>
+
         </ScrollPane>
+
     </center>
+
 </BorderPane>

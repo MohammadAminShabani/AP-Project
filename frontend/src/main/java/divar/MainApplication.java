@@ -18,7 +18,7 @@ public class MainApplication extends Application {
 
 
         SceneManager.setStage(stage);
-        SceneManager.loadScene("login.fxml", "Login");
+        SceneManager.loadScene(Constants.HOME, "خانه");
     }
 
     public static void main(String[] args) {

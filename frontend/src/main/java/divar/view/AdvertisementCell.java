@@ -104,7 +104,7 @@ public class AdvertisementCell extends ListCell<AdvertisementResponse> {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        bottomRow.setAlignment(Pos.CENTER_RIGHT);
+        bottomRow.setAlignment(Pos.CENTER_LEFT);
         bottomRow.getChildren().addAll(ratingLabel, spacer, price);
 
         content.setSpacing(8);
