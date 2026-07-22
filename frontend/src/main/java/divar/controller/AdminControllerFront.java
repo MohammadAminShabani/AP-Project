@@ -16,7 +16,7 @@ import javafx.scene.control.ListView;
 import java.io.IOException;
 import java.util.List;
 
-public class AdminController {
+public class AdminControllerFront {
 
     @FXML
     private ListView<AdvertisementResponse> pendingAdsListView;

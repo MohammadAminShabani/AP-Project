@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.MessageControllerFront" prefWidth="900" prefHeight="680"
+            stylesheets="@../css/style.css">
 
-</AnchorPane>
+    <top>
+        <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
+            <padding><Insets top="15" right="20" left="20" bottom="15"/></padding>
+            <Button text="بازگشت به گفتگوها" onAction="#back" styleClass="ghost-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="گفتگو با " styleClass="card-caption"/>
+            <Label fx:id="lblUser" styleClass="detail-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="⟳ تازه‌سازی" onAction="#refresh" styleClass="ghost-button"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ListView fx:id="messageList" styleClass="ads-list">
+            <padding><Insets top="10" right="20" left="20" bottom="10"/></padding>
+        </ListView>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT" styleClass="actions-bar">
+            <padding><Insets top="14" right="20" left="20" bottom="18"/></padding>
+            <Button fx:id="btnSend" text="ارسال" onAction="#sendMessage" styleClass="primary-button"/>
+            <TextField fx:id="txtMessage" promptText="پیام خود را بنویسید..." styleClass="form-input" HBox.hgrow="ALWAYS" onAction="#sendMessage"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

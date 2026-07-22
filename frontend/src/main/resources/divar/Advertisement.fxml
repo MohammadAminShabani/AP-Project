@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="divar.controller.AdvertisementControllerFront" prefWidth="1050" prefHeight="700"
             fx:controller="divar.controller.AdvertisementController" prefWidth="1050" prefHeight="700"
             nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
@@ -50,6 +51,24 @@
                             <Label fx:id="ownerLabel" styleClass="seller-name" wrapText="true"/>
                             <Label fx:id="rateLabel" styleClass="seller-rate"/>
                             <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
+                            <Button
+                                    fx:id="chatButton"
+                                    text="💬 گفتگو با فروشنده"
+                                    onAction="#openConversation"
+                                    styleClass="primary-button"
+                                    maxWidth="Infinity"/>
+                            <Button
+                                    fx:id="favoriteButton"
+                                    text="☆ افزودن به علاقه‌مندی‌ها"
+                                    onAction="#toggleFavorite"
+                                    styleClass="ghost-button"
+                                    maxWidth="Infinity"/>
+                            <Button
+                                    fx:id="rateButton"
+                                    text="⭐ امتیازدهی به فروشنده"
+                                    onAction="#openRating"
+                                    styleClass="ghost-button"
+                                    maxWidth="Infinity"/>
                         </VBox>
                     </HBox>
                     <HBox fx:id="ownerActionsBox" spacing="10" alignment="CENTER_LEFT" managed="false" visible="false" styleClass="actions-bar">

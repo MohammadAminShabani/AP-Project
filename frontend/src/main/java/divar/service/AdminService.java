@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AdminService {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     public List<UserResponse> getAllUsers()
             throws IOException, InterruptedException, ApiException {
