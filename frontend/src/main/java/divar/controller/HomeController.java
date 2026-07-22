@@ -78,7 +78,7 @@ public class HomeController {
         boolean isAdmin = "ADMIN".equalsIgnoreCase(SessionManager.getRole());
         adminPanelButton.setVisible(isAdmin); adminPanelButton.setManaged(isAdmin);
         advertisementListView.setCellFactory(list -> new divar.view.AdvertisementCell());
-        sortComboBox.getItems().addAll("جدیدترین", "ارزان‌ترین", "گران‌ترین");
+        sortComboBox.getItems().addAll("جدیدترین", "ارزان‌ترین", "بیشترین امتیاز فروشنده","گران‌ترین");
         sortComboBox.setValue("جدیدترین");
         searchField.textProperty().addListener((obs, oldValue, newValue) -> applyFilters());
         sortComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
@@ -115,10 +115,22 @@ public class HomeController {
     }
 
     private Comparator<AdvertisementResponse> getComparator() {
+
         String sort = sortComboBox == null ? "جدیدترین" : sortComboBox.getValue();
-        if ("ارزان‌ترین".equals(sort)) return Comparator.comparing(ad -> ad.getPrice() == null ? Long.MAX_VALUE : ad.getPrice());
-        if ("گران‌ترین".equals(sort)) return Comparator.comparing((AdvertisementResponse ad) -> ad.getPrice() == null ? 0L : ad.getPrice()).reversed();
-        return Comparator.comparing((AdvertisementResponse ad) -> ad.getId() == null ? 0L : ad.getId()).reversed();
+
+        switch (sort) {
+
+            case "ارزان‌ترین":
+                return Comparator.comparing(ad -> ad.getPrice() == null ? Long.MAX_VALUE : ad.getPrice());
+
+            case "گران‌ترین":
+                return Comparator.comparing((AdvertisementResponse ad) -> ad.getPrice() == null ? 0L : ad.getPrice()).reversed();
+
+            case "بیشترین امتیاز فروشنده":
+                return Comparator.comparing((AdvertisementResponse ad) -> ad.getAverageRate() == null ? 0.0 : ad.getAverageRate()).reversed();
+
+            default: return Comparator.comparing((AdvertisementResponse ad) -> ad.getId() == null ? 0L : ad.getId()).reversed();
+        }
     }
 
     private boolean isLoggedIn() {
