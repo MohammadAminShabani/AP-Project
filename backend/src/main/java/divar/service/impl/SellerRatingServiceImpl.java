@@ -6,10 +6,10 @@ import divar.dto.response.SellerRatingResponse;
 import divar.entity.Advertisement;
 import divar.entity.SellerRating;
 import divar.entity.User;
-import divar.enums.AdStatus;
 import divar.exception.BadRequestException;
 import divar.exception.ResourceNotFoundException;
 import divar.repository.AdvertisementRepository;
+import divar.repository.ConversationRepository;
 import divar.repository.SellerRatingRepository;
 import divar.repository.UserRepository;
 import divar.service.SellerRatingService;
@@ -23,13 +23,17 @@ public class SellerRatingServiceImpl implements SellerRatingService {
     private final SellerRatingRepository sellerRatingRepository;
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
-
-    public SellerRatingServiceImpl(SellerRatingRepository sellerRatingRepository,
-            UserRepository userRepository, AdvertisementRepository advertisementRepository) {
+    private final ConversationRepository conversationRepository;
+    public SellerRatingServiceImpl(
+            SellerRatingRepository sellerRatingRepository,
+            UserRepository userRepository,
+            AdvertisementRepository advertisementRepository,
+            ConversationRepository conversationRepository) {
 
         this.sellerRatingRepository = sellerRatingRepository;
         this.userRepository = userRepository;
         this.advertisementRepository = advertisementRepository;
+        this.conversationRepository = conversationRepository;
     }
 
     @Override
@@ -43,14 +47,18 @@ public class SellerRatingServiceImpl implements SellerRatingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
 
         User seller = advertisement.getOwner();
-        if (advertisement.getStatus() != AdStatus.SOLD) {
 
-            throw new BadRequestException(
-                    "You can rate seller only after advertisement is sold.");
-        }
         if (buyer.getId().equals(seller.getId())) {
-            throw new BadRequestException("You cannot rate yourself");}
+            throw new BadRequestException("You cannot rate yourself");
+        }
 
+        boolean hasConversation = conversationRepository.existsByBuyerAndAdvertisement(
+                        buyer, advertisement);
+
+        if (!hasConversation) {
+            throw new BadRequestException(
+                    "You must start a conversation with the seller before rating.");
+        }
         SellerRating rating = sellerRatingRepository
                 .findByBuyerAndAdvertisement(buyer, advertisement).orElse(null);
 
