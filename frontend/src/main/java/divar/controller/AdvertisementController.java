@@ -13,47 +13,38 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 
 public class AdvertisementController {
 
+    private final AdvertisementService advertisementService = new AdvertisementService();
     @FXML
     private Label titleLabel;
-
     @FXML
     private Label priceLabel;
-
     @FXML
     private Label cityLabel;
-
     @FXML
     private Label categoryLabel;
-
     @FXML
     private Label ownerLabel;
-
     @FXML
     private Label rateLabel;
-
     @FXML
     private Label statusLabel;
-
     @FXML
     private Label messageLabel;
-
     @FXML
     private TextArea descriptionArea;
-
     @FXML
     private HBox ownerActionsBox;
-
     @FXML
     private Button markSoldButton;
-
-    private final AdvertisementService advertisementService =
-            new AdvertisementService();
-
+    @FXML
+    private HBox imageGallery;
     private AdvertisementResponse advertisement;
 
     @FXML
@@ -74,10 +65,9 @@ public class AdvertisementController {
     private void render() {
 
         titleLabel.setText(advertisement.getTitle());
+        renderImages();
 
-        priceLabel.setText("قیمت: "
-                + String.format("%,d", advertisement.getPrice())
-                + " تومان");
+        priceLabel.setText("قیمت: " + String.format("%,d", advertisement.getPrice()) + " تومان");
 
         cityLabel.setText("شهر: " + advertisement.getCity());
 
@@ -91,8 +81,7 @@ public class AdvertisementController {
 
         descriptionArea.setText(advertisement.getDescription());
 
-        boolean isOwner = advertisement.getOwnerId() != null
-                && advertisement.getOwnerId().equals(SessionManager.getUserId());
+        boolean isOwner = advertisement.getOwnerId() != null && advertisement.getOwnerId().equals(SessionManager.getUserId());
 
         ownerActionsBox.setVisible(isOwner);
         ownerActionsBox.setManaged(isOwner);
@@ -124,10 +113,7 @@ public class AdvertisementController {
 
         AdvertisementSession.clear();
 
-        SceneManager.loadScene(
-                Constants.HOME,
-                "خانه"
-        );
+        SceneManager.loadScene(Constants.HOME, "خانه");
 
     }
 
@@ -141,10 +127,7 @@ public class AdvertisementController {
     @FXML
     private void deleteAdvertisement() {
 
-        Alert confirm = new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "آیا از حذف این آگهی مطمئن هستید؟"
-        );
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "آیا از حذف این آگهی مطمئن هستید؟");
 
         confirm.showAndWait().ifPresent(response -> {
 
@@ -197,5 +180,35 @@ public class AdvertisementController {
             messageLabel.setText(message);
         }
     }
+
+    private void renderImages() {
+
+        imageGallery.getChildren().clear();
+
+        if (advertisement.getImageUrls() == null || advertisement.getImageUrls().isEmpty()) {
+
+            Label noImage = new Label("این آگهی تصویری ندارد");
+
+            imageGallery.getChildren().add(noImage);
+
+            return;
+        }
+
+        for (String imageUrl : advertisement.getImageUrls()) {
+
+            Image image = new Image("http://localhost:8080" + imageUrl, true);
+
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitWidth(220);
+
+            imageView.setFitHeight(180);
+
+            imageView.setPreserveRatio(true);
+
+            imageGallery.getChildren().add(imageView);
+        }
+    }
+
 
 }

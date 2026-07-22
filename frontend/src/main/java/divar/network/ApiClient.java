@@ -143,4 +143,109 @@ public class ApiClient {
             return body;
         }
     }
+
+    public static String uploadFile(
+            String endpoint,
+            java.io.File file
+    )
+            throws IOException,
+            InterruptedException,
+            ApiException {
+
+        String boundary =
+                "----JavaFXBoundary" +
+                        System.currentTimeMillis();
+
+        byte[] fileBytes =
+                java.nio.file.Files.readAllBytes(
+                        file.toPath()
+                );
+
+        String fileName =
+                file.getName();
+
+        String prefix =
+                "--" + boundary + "\r\n" +
+                        "Content-Disposition: form-data; " +
+                        "name=\"image\"; filename=\"" +
+                        fileName +
+                        "\"\r\n" +
+                        "Content-Type: application/octet-stream\r\n\r\n";
+
+        String suffix =
+                "\r\n--" +
+                        boundary +
+                        "--\r\n";
+
+        byte[] prefixBytes =
+                prefix.getBytes(
+                        java.nio.charset.StandardCharsets.UTF_8
+                );
+
+        byte[] suffixBytes =
+                suffix.getBytes(
+                        java.nio.charset.StandardCharsets.UTF_8
+                );
+
+        byte[] body =
+                new byte[
+                        prefixBytes.length +
+                                fileBytes.length +
+                                suffixBytes.length
+                        ];
+
+        System.arraycopy(
+                prefixBytes,
+                0,
+                body,
+                0,
+                prefixBytes.length
+        );
+
+        System.arraycopy(
+                fileBytes,
+                0,
+                body,
+                prefixBytes.length,
+                fileBytes.length
+        );
+
+        System.arraycopy(
+                suffixBytes,
+                0,
+                body,
+                prefixBytes.length +
+                        fileBytes.length,
+                suffixBytes.length
+        );
+
+        HttpRequest.Builder builder =
+                HttpRequest.newBuilder()
+                        .uri(
+                                URI.create(
+                                        AppConfig.BASE_URL +
+                                                endpoint
+                                )
+                        )
+                        .header(
+                                "Content-Type",
+                                "multipart/form-data; boundary=" +
+                                        boundary
+                        )
+                        .POST(
+                                HttpRequest.BodyPublishers
+                                        .ofByteArray(body)
+                        );
+
+        addAuthorization(builder);
+
+        HttpResponse<String> response =
+                client.send(
+                        builder.build(),
+                        HttpResponse.BodyHandlers
+                                .ofString()
+                );
+
+        return unwrap(response);
+    }
 }

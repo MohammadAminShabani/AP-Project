@@ -77,4 +77,27 @@ public class AdvertisementService {
         return mapper.readValue(response, AdvertisementResponse.class);
     }
 
+
+    public AdvertisementResponse uploadImage(
+            Long advertisementId,
+            java.io.File image
+    )
+            throws IOException,
+            InterruptedException,
+            ApiException {
+
+        String response =
+                ApiClient.uploadFile(
+                        "/ads/" +
+                                advertisementId +
+                                "/images",
+                        image
+                );
+
+        return mapper.readValue(
+                response,
+                AdvertisementResponse.class
+        );
+    }
+
 }

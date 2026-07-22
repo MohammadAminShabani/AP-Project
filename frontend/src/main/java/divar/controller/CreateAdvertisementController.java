@@ -2,6 +2,7 @@ package divar.controller;
 
 import divar.config.SceneManager;
 import divar.dto.request.CreateAdvertisementRequest;
+import divar.dto.response.AdvertisementResponse;
 import divar.dto.response.CategoryResponse;
 import divar.dto.response.CityResponse;
 import divar.network.ApiException;
@@ -9,11 +10,13 @@ import divar.service.AdvertisementService;
 import divar.service.CategoryService;
 import divar.service.CityService;
 import divar.util.Constants;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.io.IOException;
 
@@ -34,6 +37,15 @@ public class CreateAdvertisementController {
     @FXML
     private TextArea descriptionArea;
 
+    @FXML
+    private Label selectedImagesLabel;
+
+    @FXML
+    private ListView<String> selectedImagesListView;
+
+    private final List<File> selectedImages =
+            new ArrayList<>();
+
     private final AdvertisementService advertisementService =
             new AdvertisementService();
 
@@ -43,6 +55,7 @@ public class CreateAdvertisementController {
     private final CategoryService categoryService =
             new CategoryService();
 
+
     @FXML
     public void initialize() {
 
@@ -50,6 +63,9 @@ public class CreateAdvertisementController {
 
         loadCategories();
 
+        selectedImagesListView.setItems(
+                FXCollections.observableArrayList()
+        );
     }
 
     @FXML
@@ -84,7 +100,14 @@ public class CreateAdvertisementController {
                     categoryComboBox.getValue().getId()
             );
 
-            advertisementService.create(request);
+            AdvertisementResponse created = advertisementService.create(request);
+
+            for (File image : selectedImages) {
+                advertisementService.uploadImage(
+                        created.getId(),
+                        image
+                );
+            }
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
@@ -213,6 +236,57 @@ public class CreateAdvertisementController {
 
         alert.showAndWait();
 
+    }
+
+    @FXML
+    private void chooseImages() {
+
+        FileChooser fileChooser =
+                new FileChooser();
+
+        fileChooser.setTitle(
+                "انتخاب تصاویر آگهی"
+        );
+
+        fileChooser.getExtensionFilters()
+                .add(
+                        new FileChooser.ExtensionFilter(
+                                "تصاویر",
+                                "*.png",
+                                "*.jpg",
+                                "*.jpeg",
+                                "*.webp"
+                        )
+                );
+
+        List<File> files =
+                fileChooser.showOpenMultipleDialog(
+                        titleField.getScene()
+                                .getWindow()
+                );
+
+        if (files == null ||
+                files.isEmpty()) {
+
+            return;
+        }
+
+        selectedImages.clear();
+
+        selectedImages.addAll(files);
+
+        selectedImagesListView.setItems(
+                FXCollections.observableArrayList(
+                        files.stream()
+                                .map(File::getName)
+                                .toList()
+                )
+        );
+
+        selectedImagesLabel.setText(
+                files.size() +
+                        " تصویر انتخاب شده"
+        );
     }
 
 }

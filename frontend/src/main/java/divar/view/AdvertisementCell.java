@@ -2,81 +2,234 @@ package divar.view;
 
 import divar.dto.response.AdvertisementResponse;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+
+import java.util.List;
 
 public class AdvertisementCell extends ListCell<AdvertisementResponse> {
 
-    private final VBox root = new VBox(8);
+
+    private final HBox root = new HBox();
+
+
+    private final ImageView imageView = new ImageView();
+
+
+    private final VBox content = new VBox();
+
+
     private final Label title = new Label();
+
+
     private final Label description = new Label();
+
+
     private final Label city = new Label();
+
+
     private final Label category = new Label();
+
+
     private final Label price = new Label();
-    private final Label badge = new Label("فعال");
+
+
+    private final Image defaultImage = new Image(getClass().getResourceAsStream("/images/no-image.png"));
+
 
     public AdvertisementCell() {
-        root.getStyleClass().add("ad-card");
-        root.setPadding(new Insets(18, 20, 18, 20));
-        root.setMaxWidth(Double.MAX_VALUE);
-        root.setMinHeight(150);
 
-        title.getStyleClass().add("ad-card-title");
-        title.setMaxWidth(Double.MAX_VALUE);
+
+        root.setSpacing(15);
+
+        root.setPadding(new Insets(12));
+
+
+        root.setStyle("""
+                -fx-background-color:white;
+                -fx-background-radius:12;
+                -fx-border-radius:12;
+                -fx-border-color:#dddddd;
+                """);
+
+
+        imageView.setFitWidth(150);
+
+        imageView.setFitHeight(120);
+
+        imageView.setPreserveRatio(true);
+
+        imageView.setSmooth(true);
+
+
+        title.setStyle("""
+                -fx-font-size:18px;
+                -fx-font-weight:bold;
+                -fx-text-fill:#222222;
+                """);
+
         title.setWrapText(true);
 
-        description.getStyleClass().add("ad-card-description");
-        description.setWrapText(true);
-        description.setMaxHeight(42);
 
-        city.getStyleClass().add("ad-card-meta");
-        category.getStyleClass().add("ad-card-meta");
-        price.getStyleClass().add("ad-card-price");
-        badge.getStyleClass().add("ad-card-badge");
+        description.setStyle("""
+                -fx-font-size:14px;
+                -fx-text-fill:#666666;
+                """);
+
+        description.setWrapText(true);
+
+        description.setMaxWidth(400);
+
+
+        city.setStyle("""
+                -fx-font-size:14px;
+                -fx-text-fill:#555555;
+                """);
+
+
+        category.setStyle("""
+                -fx-font-size:14px;
+                -fx-text-fill:#555555;
+                """);
+
+
+        price.setStyle("""
+                -fx-font-size:16px;
+                -fx-font-weight:bold;
+                -fx-text-fill:#2e7d32;
+                """);
+
+
+        content.setSpacing(8);
+
+
+        content.getChildren().addAll(title, description, city, category, price);
+
+
+        HBox.setHgrow(content, Priority.ALWAYS);
+
+
+        root.getChildren().addAll(imageView, content);
     }
+
 
     @Override
     protected void updateItem(AdvertisementResponse ad, boolean empty) {
+
+
         super.updateItem(ad, empty);
 
+
         if (empty || ad == null) {
-            setText(null);
+
             setGraphic(null);
+
             return;
         }
 
-        String adTitle = ad.getTitle();
-        title.setText(adTitle == null || adTitle.trim().isEmpty() ? "بدون عنوان" : adTitle.trim());
-        description.setText(ad.getDescription() == null ? "" : ad.getDescription());
-        city.setText("📍 " + safe(ad.getCity()));
-        category.setText("🏷 " + safe(ad.getCategory()));
-        price.setText(formatPrice(ad.getPrice()));
 
-        HBox meta = new HBox(16, city, category);
-        meta.setAlignment(Pos.CENTER_RIGHT);
+        // عنوان
+        title.setText(ad.getTitle());
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox bottom = new HBox(12, meta, spacer, badge, price);
-        bottom.setAlignment(Pos.CENTER_RIGHT);
+        // توضیحات
+        description.setText(ad.getDescription());
 
-        root.getChildren().setAll(title, description, bottom);
-        setText(null);
+
+        // شهر
+        city.setText("📍 " + ad.getCity());
+
+
+        // دسته بندی
+        category.setText("🏷 " + ad.getCategory());
+
+
+        // قیمت
+        price.setText(String.format("%,d تومان", ad.getPrice()));
+
+
+        loadImage(ad);
+
+
         setGraphic(root);
     }
 
-    private String safe(String value) {
-        return value == null ? "" : value;
-    }
 
-    private String formatPrice(Long value) {
-        if (value == null || value <= 0) return "قیمت توافقی";
-        return String.format("%,d تومان", value);
+    private void loadImage(AdvertisementResponse ad) {
+
+
+        List<String> images = ad.getImageUrls();
+
+
+        if (images == null || images.isEmpty()) {
+
+            imageView.setImage(defaultImage);
+            return;
+        }
+
+
+        String imageUrl = images.get(0);
+
+
+        String finalUrl;
+
+
+        if (imageUrl.startsWith("http")) {
+
+            finalUrl = imageUrl;
+
+        } else {
+
+            finalUrl = "http://localhost:8080" + imageUrl;
+        }
+
+
+        System.out.println("LOADING IMAGE: " + finalUrl);
+
+
+        try {
+            System.out.println(
+                    "IMAGE URL => " + finalUrl
+            );
+
+            // پارامتر ششم (backgroundLoading=true) حیاتی است: بدون آن، لود
+            // به‌صورت synchronous انجام می‌شود و اگر لود همان لحظه fail شود،
+            // exceptionProperty قبل از اینکه listener زیر اضافه شود ست می‌شود
+            // و دیگر هرگز اطلاع‌رسانی نمی‌شود (imageView خالی/خراب می‌ماند
+            // بدون هیچ پیام خطایی). با backgroundLoading=true لود در ترد
+            // پس‌زمینه انجام می‌شود و listener همیشه فرصت گرفتن exception را دارد.
+            Image image = new Image(finalUrl, 150, 120, true, true, true);
+
+            image.exceptionProperty().addListener((obs, oldException, newException) -> {
+
+                if (newException != null) {
+
+                    System.out.println("IMAGE LOAD FAILED: " + finalUrl);
+
+                    newException.printStackTrace();
+
+                    imageView.setImage(defaultImage);
+                }
+            });
+
+            if (image.isError()) {
+
+                System.out.println("IMAGE LOAD FAILED (immediate): " + finalUrl);
+
+                imageView.setImage(defaultImage);
+
+            } else {
+
+                imageView.setImage(image);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            imageView.setImage(defaultImage);
+        }
     }
 }
