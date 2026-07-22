@@ -21,4 +21,4 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     List<Conversation> findByBuyerOrSeller(
             User buyer,
             User seller);
-}
+    boolean existsByBuyerAndAdvertisement(User buyer, Advertisement advertisement);}
