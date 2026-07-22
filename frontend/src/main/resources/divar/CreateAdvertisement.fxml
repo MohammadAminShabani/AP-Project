@@ -5,10 +5,13 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="divar.controller.CreateAdvertisementController" prefWidth="1000" prefHeight="720"
+            nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
     <top>
-        <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
-            <padding><Insets top="18" right="30" bottom="18" left="30"/></padding>
+        <HBox alignment="CENTER_LEFT" styleClass="detail-header">
+            <padding>
+                <Insets top="18" right="30" bottom="18" left="30"/>
+            </padding>
             <Label text="ثبت آگهی" styleClass="brand-mark"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Button text="بازگشت" styleClass="ghost-button" onAction="#back"/>
@@ -18,23 +21,53 @@
         <ScrollPane fitToWidth="true" styleClass="detail-scroll">
             <content>
                 <VBox alignment="TOP_RIGHT" spacing="18" styleClass="form-card">
-                    <padding><Insets top="30" right="44" bottom="36" left="44"/></padding>
+                    <padding>
+                        <Insets top="30" right="44" bottom="36" left="44"/>
+                    </padding>
                     <Label text="آگهی جدیدت را بساز" styleClass="form-title"/>
                     <Label text="اطلاعات را دقیق وارد کن تا آگهی‌ات بهتر دیده شود." styleClass="hero-subtitle"/>
                     <GridPane hgap="18" vgap="8" alignment="TOP_RIGHT">
-                        <columnConstraints><ColumnConstraints hgrow="ALWAYS"/><ColumnConstraints hgrow="ALWAYS"/></columnConstraints>
-                        <Label text="عنوان آگهی" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <Label text="قیمت (تومان)" styleClass="field-label" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                        <TextField fx:id="titleField" promptText="مثلاً آیفون ۱۳ سالم" styleClass="form-input" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="priceField" promptText="35000000" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="عنوان آگهی" styleClass="field-label" GridPane.columnIndex="0"
+                               GridPane.rowIndex="0"/>
+                        <Label text="قیمت (تومان)" styleClass="field-label" GridPane.columnIndex="1"
+                               GridPane.rowIndex="0"/>
+                        <TextField fx:id="titleField" promptText="مثلاً آیفون ۱۳ سالم" styleClass="form-input"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="priceField" promptText="35000000" styleClass="form-input"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <Label text="شهر" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <Label text="دسته‌بندی" styleClass="field-label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <ComboBox fx:id="cityComboBox" maxWidth="Infinity" styleClass="form-input" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                        <ComboBox fx:id="categoryComboBox" maxWidth="Infinity" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="دسته‌بندی" styleClass="field-label" GridPane.columnIndex="1"
+                               GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="cityComboBox" maxWidth="Infinity" styleClass="form-input"
+                                  GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="categoryComboBox" maxWidth="Infinity" styleClass="form-input"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                     </GridPane>
                     <Label text="توضیحات" styleClass="field-label"/>
-                    <TextArea fx:id="descriptionArea" prefHeight="220" wrapText="true" promptText="وضعیت کالا، ویژگی‌ها و هر چیزی که خریدار باید بداند..." styleClass="form-input"/>
-                    <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <TextArea fx:id="descriptionArea" prefHeight="220" wrapText="true"
+                              promptText="وضعیت کالا، ویژگی‌ها و هر چیزی که خریدار باید بداند..."
+                              styleClass="form-input"/>
+                    <Label text="تصاویر آگهی"/>
+
+                    <HBox spacing="10"
+                          alignment="CENTER_LEFT">
+
+                        <Button text="انتخاب تصاویر"
+                                onAction="#chooseImages"/>
+
+                        <Label fx:id="selectedImagesLabel"
+                               text="هیچ تصویری انتخاب نشده"
+                               wrapText="true"/>
+
+                    </HBox>
+
+                    <ListView fx:id="selectedImagesListView"
+                              prefHeight="120"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
                         <Button text="ثبت آگهی" styleClass="primary-button" onAction="#createAdvertisement"/>
                         <Button text="انصراف" styleClass="ghost-button" onAction="#back"/>
                     </HBox>

@@ -81,11 +81,7 @@ public class AdminController {
 
             List<AdvertisementResponse> allAds = adminService.getAllAdvertisements();
 
-            List<AdvertisementResponse> pending = allAds.stream()
-                    .filter(ad -> "PENDING".equals(ad.getStatus()))
-                    .toList();
-
-            pendingAdsListView.setItems(FXCollections.observableArrayList(pending));
+            pendingAdsListView.setItems(FXCollections.observableArrayList(allAds));
 
         } catch (ApiException e) {
             showMessage(e.getMessage());

@@ -7,6 +7,7 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="divar.controller.LoginController"
             prefWidth="1200" prefHeight="700"
+            nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
 
     <left>

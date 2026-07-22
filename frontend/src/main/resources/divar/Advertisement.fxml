@@ -5,9 +5,10 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="divar.controller.AdvertisementController" prefWidth="1050" prefHeight="700"
+            nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
     <top>
-        <HBox alignment="CENTER_RIGHT" styleClass="detail-header">
+        <HBox alignment="CENTER_LEFT" styleClass="detail-header">
             <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
             <Label text="جزئیات آگهی" styleClass="brand-mark"/>
             <Region HBox.hgrow="ALWAYS"/>
@@ -21,8 +22,18 @@
                     <padding><Insets top="28" right="36" bottom="36" left="36"/></padding>
                     <HBox spacing="28" alignment="TOP_RIGHT">
                         <VBox spacing="14" HBox.hgrow="ALWAYS">
+                            <ScrollPane fitToHeight="true"
+                                        fitToWidth="true"
+                                        prefHeight="220"
+                                        hbarPolicy="AS_NEEDED">
+
+                                <HBox fx:id="imageGallery"
+                                      spacing="10"
+                                      alignment="CENTER_LEFT"/>
+
+                            </ScrollPane>
                             <Label fx:id="titleLabel" styleClass="detail-title" wrapText="true"/>
-                            <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Label fx:id="priceLabel" styleClass="detail-price"/>
                                 <Label fx:id="statusLabel" styleClass="status-pill"/>
                             </HBox>
@@ -41,7 +52,7 @@
                             <Label fx:id="messageLabel" styleClass="error" wrapText="true"/>
                         </VBox>
                     </HBox>
-                    <HBox fx:id="ownerActionsBox" spacing="10" alignment="CENTER_RIGHT" managed="false" visible="false" styleClass="actions-bar">
+                    <HBox fx:id="ownerActionsBox" spacing="10" alignment="CENTER_LEFT" managed="false" visible="false" styleClass="actions-bar">
                         <Button text="ویرایش" styleClass="ghost-button" onAction="#editAdvertisement"/>
                         <Button fx:id="markSoldButton" text="فروخته شد" styleClass="primary-button" onAction="#markAsSold"/>
                         <Button text="حذف آگهی" styleClass="danger-button" onAction="#deleteAdvertisement"/>

@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import java.io.IOException;
 import java.util.List;
@@ -45,12 +46,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final CityRepository cityRepository;
     private final AdvertisementImageRepository advertisementImageRepository;
 
-    public AdvertisementServiceImpl(
-            AdvertisementRepository advertisementRepository,
-            UserRepository userRepository,
-            CategoryRepository categoryRepository,
-            CityRepository cityRepository,
-            AdvertisementImageRepository advertisementImageRepository) {
+    @org.springframework.beans.factory.annotation.Value("${app.upload-dir}")
+    private String uploadDir;
+
+    public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository, UserRepository userRepository, CategoryRepository categoryRepository, CityRepository cityRepository, AdvertisementImageRepository advertisementImageRepository) {
 
         this.advertisementRepository = advertisementRepository;
         this.userRepository = userRepository;
@@ -69,10 +68,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         response.setPrice(advertisement.getPrice());
 
         if (advertisement.getCity() != null) {
-            response.setCity(advertisement.getCity().getName());}
+            response.setCity(advertisement.getCity().getName());
+        }
 
         if (advertisement.getCategory() != null) {
-            response.setCategory(advertisement.getCategory().getName());}
+            response.setCategory(advertisement.getCategory().getName());
+        }
 
         response.setStatus(advertisement.getStatus());
 
@@ -85,30 +86,28 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             response.setAverageRate(advertisement.getOwner().getAverageRating());
         }
 
-        List<String> imageUrls = advertisement
-                .getImages()
-                .stream()
-                .map(AdvertisementImage::getImageUrl)
-                .collect(Collectors.toList());
+        if (advertisement.getImages() != null) {
 
-        response.setImageUrls(imageUrls);
+            List<String> imageUrls = advertisement.getImages().stream().map(AdvertisementImage::getImageUrl).collect(Collectors.toList());
+
+            response.setImageUrls(imageUrls);
+
+        } else {
+
+            response.setImageUrls(List.of());
+        }
         return response;
     }
+
     @Override
     public AdvertisementResponse create(CreateAdvertisementRequest request, User owner) {
 
 
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
-        City city = cityRepository.findById(request.getCityId())
-                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
+        City city = cityRepository.findById(request.getCityId()).orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
-        Advertisement advertisement = new Advertisement(
-                request.getTitle(),
-                request.getDescription(),
-                request.getPrice(),
-                owner, category, city);
+        Advertisement advertisement = new Advertisement(request.getTitle(), request.getDescription(), request.getPrice(), owner, category, city);
 
         advertisement.setStatus(AdStatus.PENDING);
 
@@ -120,19 +119,16 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Override
     public AdvertisementResponse findById(Long id) {
 
-        Advertisement advertisement = advertisementRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Advertisement not found"));
+        Advertisement advertisement = advertisementRepository.findById(id).orElseThrow(() -> new NotFoundException("Advertisement not found"));
 
         return mapToResponse(advertisement);
     }
 
     @Override
     public List<AdvertisementResponse> findAll() {
-        return advertisementRepository.findByStatus(AdStatus.ACTIVE)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return advertisementRepository.findByStatus(AdStatus.ACTIVE).stream().map(this::mapToResponse).toList();
     }
+
     @Override
     public Page<AdvertisementResponse> search(SearchAdvertisementRequest request) {
 
@@ -185,75 +181,47 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        if (request.getMinPrice() != null
-                && request.getMaxPrice() != null
-                && request.getMinPrice() > request.getMaxPrice()) {
+        if (request.getMinPrice() != null && request.getMaxPrice() != null && request.getMinPrice() > request.getMaxPrice()) {
 
-            throw new BadRequestException(
-                    "Minimum price cannot be greater than maximum price.");
+            throw new BadRequestException("Minimum price cannot be greater than maximum price.");
         }
-        Specification<Advertisement> specification =
-                Specification.where(
-                                AdvertisementSpecification.hasKeyword(request.getKeyword()))
-                        .and(AdvertisementSpecification.hasCity(request.getCityId()))
-                        .and(AdvertisementSpecification.hasCategory(request.getCategoryId()))
-                        .and(AdvertisementSpecification.hasStatus(
-                                request.getStatus() == null ? AdStatus.ACTIVE : request.getStatus()))
-                        .and(AdvertisementSpecification.hasMinPrice(request.getMinPrice()))
-                        .and(AdvertisementSpecification.hasMaxPrice(request.getMaxPrice()));
+        Specification<Advertisement> specification = Specification.where(AdvertisementSpecification.hasKeyword(request.getKeyword())).and(AdvertisementSpecification.hasCity(request.getCityId())).and(AdvertisementSpecification.hasCategory(request.getCategoryId())).and(AdvertisementSpecification.hasStatus(request.getStatus() == null ? AdStatus.ACTIVE : request.getStatus())).and(AdvertisementSpecification.hasMinPrice(request.getMinPrice())).and(AdvertisementSpecification.hasMaxPrice(request.getMaxPrice()));
 
-        Page<Advertisement> advertisements =
-                advertisementRepository.findAll(specification, pageable);
+        Page<Advertisement> advertisements = advertisementRepository.findAll(specification, pageable);
 
         return advertisements.map(this::mapToResponse);
     }
+
     @Override
     public List<AdvertisementResponse> findByStatus(AdStatus status) {
 
-        return advertisementRepository
-                .findByStatus(status)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return advertisementRepository.findByStatus(status).stream().map(this::mapToResponse).toList();
     }
+
     @Override
     public List<AdvertisementResponse> findByCategory(Long categoryId) {
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
-        return advertisementRepository
-                .findByCategoryAndStatus(category, AdStatus.ACTIVE)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return advertisementRepository.findByCategoryAndStatus(category, AdStatus.ACTIVE).stream().map(this::mapToResponse).toList();
     }
+
     @Override
     public List<AdvertisementResponse> findByCity(Long cityId) {
 
-        City city = cityRepository.findById(cityId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("City not found"));
+        City city = cityRepository.findById(cityId).orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
-        return advertisementRepository
-                .findByCityAndStatus(city, AdStatus.ACTIVE)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return advertisementRepository.findByCityAndStatus(city, AdStatus.ACTIVE).stream().map(this::mapToResponse).toList();
     }
+
     @Override
     public List<AdvertisementResponse> findByOwner(Long ownerId) {
 
-        User owner = userRepository.findById(ownerId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Owner not found"));
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
 
-        return advertisementRepository
-                .findByOwner(owner)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return advertisementRepository.findByOwner(owner).stream().map(this::mapToResponse).toList();
     }
+
     @Override
     @Transactional
     public AdvertisementResponse update(Long id, UpdateAdvertisementRequest request) {
@@ -276,21 +244,19 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         if (request.getCategoryId() != null) {
 
-            Category category = categoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("Category not found"));
+            Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
             advertisement.setCategory(category);
         }
 
         if (request.getCityId() != null) {
 
-            City city = cityRepository.findById(request.getCityId())
-                    .orElseThrow(() ->
-                            new ResourceNotFoundException("City not found"));
+            City city = cityRepository.findById(request.getCityId()).orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
             advertisement.setCity(city);
         }
+
+        advertisement.setStatus(AdStatus.PENDING);
 
         Advertisement updated = advertisementRepository.save(advertisement);
 
@@ -309,10 +275,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             throw new BadRequestException("Advertisement is already deleted.");
         }
 
-        // حذف منطقی: به جای حذف واقعی رکورد از پایگاه داده (که به‌خاطر
-        // ارجاع پیام‌ها، علاقه‌مندی‌ها و امتیازها به این آگهی می‌تواند
-        // باعث خطای کلید خارجی شود)، فقط وضعیت آن به DELETED تغییر می‌کند.
-        // این آگهی دیگر در هیچ لیست عمومی یا جست‌وجویی نمایش داده نمی‌شود.
         advertisement.changeStatus(AdStatus.DELETED);
 
         advertisementRepository.save(advertisement);
@@ -331,8 +293,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
 
         if (advertisement.getStatus() != AdStatus.ACTIVE) {
-            throw new BadRequestException(
-                    "Only an active advertisement can be marked as sold.");
+            throw new BadRequestException("Only an active advertisement can be marked as sold.");
         }
 
         advertisement.changeStatus(AdStatus.SOLD);
@@ -344,22 +305,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     private Advertisement getAdvertisement(Long id) {
 
-        return advertisementRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Advertisement not found"));
+        return advertisementRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Advertisement not found"));
     }
 
     private void checkOwner(Advertisement advertisement) {
 
-        User currentUser =
-                (User) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (!advertisement.getOwner().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException(
-                    "You are not allowed to modify this advertisement");
+            throw new AccessDeniedException("You are not allowed to modify this advertisement");
         }
     }
 
@@ -368,66 +322,68 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public AdvertisementResponse uploadImage(Long advertisementId, MultipartFile image) {
 
         Advertisement advertisement = getAdvertisement(advertisementId);
-
         checkOwner(advertisement);
 
+        if (image == null || image.isEmpty()) {
+
+            throw new BadRequestException("Image file is empty.");
+        }
+
+        String originalName = image.getOriginalFilename();
+
+        if (originalName == null || !originalName.contains(".")) {
+
+            throw new BadRequestException("Invalid image file.");
+        }
+
+
+        String extension = originalName.substring(originalName.lastIndexOf(".")).toLowerCase();
+
+
+        // بررسی پسوند فایل
+        if (!extension.equals(".jpg") && !extension.equals(".jpeg") && !extension.equals(".png") && !extension.equals(".webp")) {
+
+            throw new BadRequestException("Only jpg, jpeg, png and webp images are allowed.");
+        }
+
+        // محدودیت حجم 5 مگابایت
+        if (image.getSize() > 5 * 1024 * 1024) {
+
+            throw new BadRequestException("Maximum file size is 5MB.");
+        }
         try {
-            List<String> allowed = List.of(
-
-                    "image/jpeg",
-                    "image/png",
-                    "image/jpg",
-                    "image/webp"
-            );
-
-            if (!allowed.contains(image.getContentType())) {
-
-                throw new BadRequestException(
-                        "Unsupported image format.");
-            }
-            if (image.getSize() > 5 * 1024 * 1024) {
-
-                throw new BadRequestException("Maximum file size is 5MB.");
-            }
-            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-
-            Path uploadPath = Paths.get("uploads");
-
+            String fileName = UUID.randomUUID() + extension;
+            Path uploadPath = Paths.get(uploadDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-
-            Files.copy(image.getInputStream(),
-                    uploadPath.resolve(fileName)
-            );
-
-            AdvertisementImage advertisementImage =
-                    new AdvertisementImage("/uploads/" + fileName, advertisement);
-
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(image.getInputStream(), filePath);
+            AdvertisementImage advertisementImage = new AdvertisementImage("/uploads/" + fileName, advertisement);
             advertisement.addImage(advertisementImage);
 
+            if (advertisement.getStatus() == AdStatus.ACTIVE) {
+
+                advertisement.setStatus(AdStatus.PENDING);
+            }
             advertisementRepository.save(advertisement);
-
             return mapToResponse(advertisement);
-
         } catch (IOException e) {
-
-            throw new RuntimeException("Failed to upload image");
+            throw new RuntimeException("Failed to upload image.");
         }
     }
+
     @Override
     @Transactional
     public void deleteImage(Long imageId) {
 
-        AdvertisementImage image = advertisementImageRepository.findById(imageId)
-                .orElseThrow(() -> new ResourceNotFoundException("Image not found"));
+        AdvertisementImage image = advertisementImageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("Image not found"));
 
         checkOwner(image.getAdvertisement());
 
         try {
 
-            Path file = Paths.get("uploads",
-                    Paths.get(image.getImageUrl()).getFileName().toString());
+            Path file = Paths.get(uploadDir, Paths.get(image.getImageUrl()).getFileName().toString());
 
             Files.deleteIfExists(file);
 
