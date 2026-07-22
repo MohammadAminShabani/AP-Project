@@ -25,6 +25,9 @@
 .detail-title { -fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #222; }
 .detail-price { -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #a62626; }
 .status-pill { -fx-background-color: #eef8f0; -fx-text-fill: #2f7d32; -fx-padding: 7px 12px; -fx-background-radius: 20px; }
+.status-pill-sold { -fx-background-color: #f1f1f1; -fx-text-fill: #666666; }
+.status-pill-pending { -fx-background-color: #fff6e5; -fx-text-fill: #b27600; }
+.status-pill-rejected { -fx-background-color: #fdecea; -fx-text-fill: #c0392b; }
 .meta-row { -fx-text-fill: #777; -fx-font-size: 13px; }
 .detail-description { -fx-background-color: white; -fx-border-color: #e5e5e5; -fx-background-radius: 12px; -fx-border-radius: 12px; -fx-font-size: 14px; }
 .seller-card, .form-card { -fx-background-color: white; -fx-background-radius: 18px; -fx-border-color: #ededed; -fx-border-radius: 18px; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,.05), 12, 0, 0, 3); }
@@ -86,3 +89,34 @@
     -fx-padding: 5px 10px;
     -fx-background-radius: 14px;
 }
+
+/* Advertisement card polish */
+.ad-card:hover {
+    -fx-border-color: #e6bcbc;
+    -fx-effect: dropshadow(gaussian, rgba(166,38,38,.16), 20, 0, 0, 6);
+    -fx-cursor: hand;
+}
+.ad-card-image-frame {
+    -fx-background-color: #f2f2f2;
+    -fx-background-radius: 16px;
+}
+.tag-chip {
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: #666666;
+    -fx-font-size: 11px;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 20px;
+}
+.ad-card-rating {
+    -fx-text-fill: #b27600;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+.ad-card-badge.badge-sold { -fx-background-color: #f1f1f1; -fx-text-fill: #666666; }
+.ad-card-badge.badge-pending { -fx-background-color: #fff6e5; -fx-text-fill: #b27600; }
+.ad-card-badge.badge-rejected { -fx-background-color: #fdecea; -fx-text-fill: #c0392b; }
+
+/* Empty state (no ads / no search results) */
+.empty-state-icon { -fx-font-size: 44px; }
+.empty-state-title { -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #555555; }
+.empty-state-subtitle { -fx-font-size: 13px; -fx-text-fill: #999999; }

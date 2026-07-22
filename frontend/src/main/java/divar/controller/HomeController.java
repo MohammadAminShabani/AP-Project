@@ -20,6 +20,7 @@ public class HomeController {
     @FXML private Label welcomeLabel;
     @FXML private Label resultCountLabel;
     @FXML private ListView<AdvertisementResponse> advertisementListView;
+    @FXML private javafx.scene.layout.VBox emptyStateBox;
     @FXML private Button adminPanelButton;
     @FXML private TextField searchField;
     @FXML private ComboBox<String> sortComboBox;
@@ -62,6 +63,11 @@ public class HomeController {
                 .toList();
         advertisementListView.setItems(FXCollections.observableArrayList(filtered));
         if (resultCountLabel != null) resultCountLabel.setText(filtered.size() + " آگهی");
+        if (emptyStateBox != null) {
+            boolean isEmpty = filtered.isEmpty();
+            emptyStateBox.setVisible(isEmpty);
+            emptyStateBox.setManaged(isEmpty);
+        }
     }
 
     private Comparator<AdvertisementResponse> getComparator() {

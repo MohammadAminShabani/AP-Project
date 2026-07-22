@@ -5,11 +5,12 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="divar.controller.HomeController" prefWidth="1280" prefHeight="760"
+            nodeOrientation="RIGHT_TO_LEFT"
             stylesheets="@../css/style.css">
     <top>
         <VBox styleClass="home-header" spacing="16">
             <padding><Insets top="18" right="32" bottom="18" left="32"/></padding>
-            <HBox alignment="CENTER_RIGHT" spacing="14">
+            <HBox alignment="CENTER_LEFT" spacing="14">
                 <Label text="دیوار" styleClass="brand-mark"/>
                 <Label fx:id="welcomeLabel" styleClass="welcome-text"/>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -17,12 +18,12 @@
                 <Button fx:id="adminPanelButton" text="پنل مدیریت" styleClass="ghost-button" managed="false" visible="false" onAction="#openAdminPanel"/>
                 <Button text="خروج" styleClass="ghost-button" onAction="#logout"/>
             </HBox>
-            <VBox spacing="6" alignment="CENTER_RIGHT">
+            <VBox spacing="6" alignment="CENTER_LEFT">
                 <Label text="هر چیزی که لازم داری، همین‌جاست" styleClass="hero-title"/>
                 <Label text="آگهی‌های جدید را پیدا کن یا کالای خودت را برای فروش ثبت کن." styleClass="hero-subtitle"/>
             </VBox>
-            <HBox spacing="10" alignment="CENTER_RIGHT">
-                <TextField fx:id="searchField" promptText="جست‌وجو در عنوان و توضیحات آگهی..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="🔍 جست‌وجو در عنوان و توضیحات آگهی..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
                 <ComboBox fx:id="sortComboBox" promptText="مرتب‌سازی" styleClass="sort-combo"/>
                 <Button text="تازه‌سازی" styleClass="ghost-button" onAction="#refresh"/>
             </HBox>
@@ -31,12 +32,19 @@
     <center>
         <VBox spacing="14" styleClass="content-shell">
             <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
-            <HBox alignment="CENTER_RIGHT">
+            <HBox alignment="CENTER_LEFT">
                 <Label text="آخرین آگهی‌ها" styleClass="section-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="resultCountLabel" styleClass="result-count"/>
             </HBox>
-            <ListView fx:id="advertisementListView" VBox.vgrow="ALWAYS" styleClass="ads-list"/>
+            <StackPane VBox.vgrow="ALWAYS">
+                <ListView fx:id="advertisementListView" styleClass="ads-list"/>
+                <VBox fx:id="emptyStateBox" alignment="CENTER" spacing="8" visible="false" managed="false">
+                    <Label text="🔍" styleClass="empty-state-icon"/>
+                    <Label text="آگهی‌ای پیدا نشد" styleClass="empty-state-title"/>
+                    <Label text="عبارت جست‌وجو یا فیلتر را تغییر بده و دوباره امتحان کن" styleClass="empty-state-subtitle"/>
+                </VBox>
+            </StackPane>
         </VBox>
     </center>
 </BorderPane>

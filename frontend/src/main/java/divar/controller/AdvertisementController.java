@@ -67,17 +67,22 @@ public class AdvertisementController {
         titleLabel.setText(advertisement.getTitle());
         renderImages();
 
-        priceLabel.setText("قیمت: " + String.format("%,d", advertisement.getPrice()) + " تومان");
+        priceLabel.setText(advertisement.getPrice() != null
+                ? String.format("%,d تومان", advertisement.getPrice())
+                : "قیمت نامشخص");
 
-        cityLabel.setText("شهر: " + advertisement.getCity());
+        cityLabel.setText("📍 " + safe(advertisement.getCity()));
 
-        categoryLabel.setText("دسته‌بندی: " + advertisement.getCategory());
+        categoryLabel.setText("🏷 " + safe(advertisement.getCategory()));
 
-        ownerLabel.setText("فروشنده: " + advertisement.getOwnerName());
+        ownerLabel.setText(safe(advertisement.getOwnerName()));
 
-        rateLabel.setText("امتیاز: " + advertisement.getAverageRate());
+        rateLabel.setText(advertisement.getAverageRate() != null && advertisement.getAverageRate() > 0
+                ? String.format(java.util.Locale.US, "⭐ %.1f از ۵", advertisement.getAverageRate())
+                : "هنوز امتیازی ثبت نشده");
 
-        statusLabel.setText("وضعیت: " + statusLabelFa(advertisement.getStatus()));
+        statusLabel.setText(statusLabelFa(advertisement.getStatus()));
+        applyStatusStyle(advertisement.getStatus());
 
         descriptionArea.setText(advertisement.getDescription());
 
@@ -90,6 +95,26 @@ public class AdvertisementController {
         boolean canMarkSold = isOwner && "ACTIVE".equals(advertisement.getStatus());
 
         markSoldButton.setDisable(!canMarkSold);
+    }
+
+    private String safe(String value) {
+        return value == null || value.isBlank() ? "نامشخص" : value;
+    }
+
+    private void applyStatusStyle(String status) {
+
+        statusLabel.getStyleClass().removeAll("status-pill-sold", "status-pill-pending", "status-pill-rejected");
+
+        if (status == null) {
+            return;
+        }
+
+        switch (status) {
+            case "SOLD" -> statusLabel.getStyleClass().add("status-pill-sold");
+            case "PENDING" -> statusLabel.getStyleClass().add("status-pill-pending");
+            case "REJECTED" -> statusLabel.getStyleClass().add("status-pill-rejected");
+            default -> { /* ACTIVE از استایل پیش‌فرض سبز status-pill استفاده می‌کند */ }
+        }
     }
 
     private String statusLabelFa(String status) {
@@ -187,26 +212,58 @@ public class AdvertisementController {
 
         if (advertisement.getImageUrls() == null || advertisement.getImageUrls().isEmpty()) {
 
-            Label noImage = new Label("این آگهی تصویری ندارد");
+            javafx.scene.layout.VBox emptyBox = new javafx.scene.layout.VBox(6);
+            emptyBox.setAlignment(javafx.geometry.Pos.CENTER);
+            emptyBox.setPrefSize(220, 180);
+            emptyBox.getStyleClass().add("ad-card-image-frame");
 
-            imageGallery.getChildren().add(noImage);
+            Label icon = new Label("🖼");
+            icon.setStyle("-fx-font-size: 32px;");
+
+            Label noImage = new Label("این آگهی تصویری ندارد");
+            noImage.getStyleClass().add("card-caption");
+
+            emptyBox.getChildren().addAll(icon, noImage);
+            imageGallery.getChildren().add(emptyBox);
 
             return;
         }
 
         for (String imageUrl : advertisement.getImageUrls()) {
 
-            Image image = new Image("http://localhost:8080" + imageUrl, true);
+            javafx.scene.layout.StackPane frame = new javafx.scene.layout.StackPane();
+            frame.setPrefSize(220, 180);
+            frame.setMinSize(220, 180);
+            frame.setMaxSize(220, 180);
+            frame.getStyleClass().add("ad-card-image-frame");
 
-            ImageView imageView = new ImageView(image);
-
+            ImageView imageView = new ImageView();
             imageView.setFitWidth(220);
-
             imageView.setFitHeight(180);
-
             imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
 
-            imageGallery.getChildren().add(imageView);
+            javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(220, 180);
+            clip.setArcWidth(20);
+            clip.setArcHeight(20);
+            imageView.setClip(clip);
+
+            String finalUrl = imageUrl.startsWith("http") ? imageUrl : "http://localhost:8080" + imageUrl;
+
+            Image image = new Image(finalUrl, 220, 180, true, true, true);
+
+            image.exceptionProperty().addListener((obs, oldEx, newEx) -> {
+                if (newEx != null) {
+                    imageView.setImage(null);
+                }
+            });
+
+            if (!image.isError()) {
+                imageView.setImage(image);
+            }
+
+            frame.getChildren().add(imageView);
+            imageGallery.getChildren().add(frame);
         }
     }
 
